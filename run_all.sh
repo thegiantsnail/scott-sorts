@@ -3,6 +3,7 @@
 # Usage: ./run_all.sh
 
 set -euo pipefail
+export PYTHONUTF8=1
 
 echo "=== 1. CFG/DFG Analysis of Sorting Algorithms ==="
 python src/sort_analysis.py

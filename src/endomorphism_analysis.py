@@ -98,7 +98,7 @@ in_place = {nm for nm in NAMES if 'Swap' in COMPS[nm] or
             (nm in ['Insertion','Shell'] and 'Shift' in COMPS[nm])}
 # Bubble, Selection, Heap, Insertion are in-place
 # Actually let's be precise about mutation
-mutates = {'Bubble','Insertion','Selection','Heap','Shell','Radix'}
+mutates = {'Bubble','Insertion','Selection','Heap','Radix'}
 functional = {'Quick','Merge'}  
 hybrid = {'Tim'}  # both
 

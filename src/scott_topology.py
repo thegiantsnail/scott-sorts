@@ -48,33 +48,7 @@ for a in names:
         print(f"             ≥ {below}")
 
 # ============================================================
-# 2. COVERING RELATIONS (Hasse edges)
-# ============================================================
-covers = []
-for a in names:
-    for b in names:
-        if a == b or not leq(a, b):
-            continue
-        # Check if there's anything strictly between a and b
-        is_cover = True
-        for c in names:
-            if c == a or c == b:
-                continue
-            if leq(a, c) and leq(c, b) and not (leq(b, c) and leq(c, a)):
-                # c is strictly between a and b (and not equal to either)
-                if not (ALGS[c] == ALGS[a] or ALGS[c] == ALGS[b]):
-                    is_cover = False
-                    break
-        if is_cover:
-            covers.append((a, b))
-
-print(f"\nCOVERING RELATIONS ({len(covers)} edges):")
-for a, b in covers:
-    diff = ALGS[b] - ALGS[a]
-    print(f"  {a} ≺ {b}  (adds: {diff})")
-
-# ============================================================
-# 3. NOTE: Insertion = Shell in this poset
+# 2. NOTE: Insertion = Shell in this poset — collapse before covers
 # ============================================================
 print("\n" + "=" * 60)
 print("NOTE: Insertion and Shell have IDENTICAL component sets")
@@ -93,6 +67,30 @@ distinct_n = len(distinct_names)
 print(f"\nDistinct points in the poset: {distinct_n}")
 for nm in distinct_names:
     print(f"  {nm:10s}: {ALGS[nm]}")
+
+# ============================================================
+# 3. COVERING RELATIONS (Hasse edges) — on the 8-point quotient
+# ============================================================
+covers = []
+for a in distinct_names:
+    for b in distinct_names:
+        if a == b or not leq(a, b):
+            continue
+        # Check if there's anything strictly between a and b
+        is_cover = True
+        for c in distinct_names:
+            if c == a or c == b:
+                continue
+            if leq(a, c) and leq(c, b) and not (leq(b, c) and leq(c, a)):
+                is_cover = False
+                break
+        if is_cover:
+            covers.append((a, b))
+
+print(f"\nCOVERING RELATIONS ({len(covers)} edges):")
+for a, b in covers:
+    diff = ALGS[b] - ALGS[a]
+    print(f"  {a} ≺ {b}  (adds: {diff})")
 
 # ============================================================
 # 4. SCOTT TOPOLOGY on the finite poset
