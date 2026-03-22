@@ -1,0 +1,544 @@
+======================================================================
+SORT TEST BATTERY
+Seeds: [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+Sizes: [64, 256, 1024]  (O(n²) capped at n=256)
+======================================================================
+
+Battery: 12 algorithms × 13 input types × 3 sizes × 8 seeds
+Total trials: 3536  (O(n²) algorithms capped at n=256)
+
+  200/3536  (6%)  last: Bubble / killer_quick n=64
+  400/3536  (11%)  last: Insertion / all_same n=1024
+  600/3536  (17%)  last: Selection / few_unique n=256
+  800/3536  (23%)  last: Merge / reverse n=1024
+  1000/3536  (28%)  last: Merge / random_blocks n=64
+  1200/3536  (34%)  last: Quick / pipe_organ n=256
+  1400/3536  (40%)  last: Heap / sorted n=1024
+  1600/3536  (45%)  last: Heap / rotated n=64
+  1800/3536  (51%)  last: Radix / sawtooth n=256
+  2000/3536  (57%)  last: Tim / random n=1024
+  2200/3536  (62%)  last: Tim / interleaved n=64
+  2400/3536  (68%)  last: Hybrid_QI / few_unique n=256
+  2600/3536  (74%)  last: Hybrid_QI / killer_quick n=1024
+  2800/3536  (79%)  last: Hybrid_MI / two_values n=64
+  3000/3536  (85%)  last: Hybrid_RI / nearly_sorted n=256
+  3200/3536  (90%)  last: Hybrid_RI / random_blocks n=1024
+  3400/3536  (96%)  last: Hybrid_Intro / all_same n=64
+  3536/3536  (100%)  done.
+
+Full results written to src/test_results.json
+
+
+======================================================================
+CORRECTNESS SUMMARY
+======================================================================
+
+  Total trials : 3536
+  Correct      : 3536  (100.0%)
+  Wrong output : 0
+  Exceptions   : 0
+
+======================================================================
+Q1: OVERALL EFFECTIVENESS RANKING  (n=1024, mean over all inputs & seeds)
+======================================================================
+
+  Rank  Algorithm        Mean Comps   Min Comps   Max Comps    Mean ms
+  ─────────────────────────────────────────────────────────────────
+  1     Radix                     0           0           0      0.463
+  2     Hybrid_RI                 0           0           0      1.006
+  3     Merge                 6,547       5,120       8,961      1.573
+  4     Hybrid_MI             7,013       4,032      10,803      1.230
+  5     Tim                   8,595       3,552      18,432      1.144
+  6     Hybrid_QI            10,025       7,041      21,662      0.840
+  7     Hybrid_Intro         10,119       7,041      22,884      1.877
+  8     Quick                10,906       8,707      21,522      1.046
+  9     Heap                 15,523       3,066      18,060      1.361
+  10    Insertion           183,201       1,023     523,776     14.256
+
+  Bubble rank:    None / 10
+  Selection rank: None / 10
+
+  Per-input-type bottom 3 (by mean comparisons at n=1024):
+    random          : worst→ Insertion(262,513) > Heap(17,327) > Tim(13,832)
+    sorted          : worst→ Heap(18,060) > Quick(8,716) > Hybrid_Intro(7,047)
+    reverse         : worst→ Insertion(523,776) > Tim(18,432) > Heap(16,407)
+    nearly_sorted   : worst→ Insertion(31,464) > Heap(17,959) > Quick(9,210)
+    few_unique      : worst→ Insertion(210,833) > Heap(14,764) > Tim(11,872)
+    sawtooth        : worst→ Insertion(236,798) > Heap(17,207) > Quick(11,240)
+    pipe_organ      : worst→ Insertion(262,144) > Hybrid_Intro(22,884) > Hybrid_QI(21,662)
+    all_same        : worst→ Quick(8,707) > Hybrid_Intro(7,041) > Hybrid_QI(7,041)
+    two_values      : worst→ Insertion(133,176) > Heap(9,709) > Quick(8,911)
+    interleaved     : worst→ Heap(18,060) > Quick(8,716) > Hybrid_Intro(7,047)
+    rotated         : worst→ Insertion(197,630) > Heap(17,480) > Quick(11,629)
+    random_blocks   : worst→ Insertion(257,550) > Heap(17,032) > Quick(11,039)
+    killer_quick    : worst→ Insertion(262,655) > Heap(17,075) > Tim(12,512)
+
+
+======================================================================
+Q2: INPUT CLASSES WHERE AN ALGORITHM OUTPERFORMS TimCustom
+    (by wall-clock time; grouped by alg × input × n)
+======================================================================
+
+  ROBUST UPSETS (beaten in ≥ 2 of 8 seeds):
+  Algorithm      Input                 n  Seeds    Mean×     Max×  Seeds where beaten
+  ───────────────────────────────────────────────────────────────────────────
+  Radix          few_unique         1024      8    9.884   10.523  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          few_unique          256      8    8.679   10.801  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          two_values         1024      8    7.123    8.709  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      interleaved        1024      8    6.829    7.918  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          reverse              64      8    6.405    7.107  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      all_same           1024      8    6.071    6.272  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          sawtooth             64      8    5.909    6.157  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      sorted             1024      8    5.739    6.471  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          two_values          256      8    5.234    6.175  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          few_unique           64      8    5.169    5.978  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          reverse             256      8    5.040    5.245  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      reverse              64      8    4.928    5.452  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      interleaved         256      8    4.907    5.088  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      all_same            256      8    4.901    7.124  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      few_unique         1024      8    4.805    5.351  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      sorted              256      8    4.755    5.558  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          sawtooth            256      8    4.414    5.038  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          reverse            1024      8    4.312    5.142  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      few_unique          256      8    4.213    4.971  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          pipe_organ         1024      8    3.478    3.808  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          two_values           64      8    3.432    3.915  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          killer_quick         64      8    3.374    4.318  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      reverse             256      8    3.324    3.383  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          killer_quick        256      8    3.295    3.405  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          pipe_organ           64      8    3.242    3.473  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   reverse              64      8    3.075    3.392  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      reverse              64      8    3.016    3.586  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          reverse              64      8    2.948    3.262  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      two_values          256      8    2.930    3.235  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          killer_quick       1024      8    2.928    3.237  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random_blocks        64      8    2.877    3.977  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          pipe_organ          256      8    2.871    2.909  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      sawtooth             64      8    2.792    2.978  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      reverse            1024      8    2.602    3.043  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      reverse             256      8    2.500    2.544  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          reverse             256      8    2.466    2.513  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random              256      8    2.422    2.648  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          sawtooth           1024      8    2.393    2.730  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      few_unique           64      8    2.390    2.696  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           reverse              64      8    2.382    2.601  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random             1024      8    2.317    2.710  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      interleaved          64      8    2.306    2.462  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      sawtooth             64      8    2.297    2.414  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      sorted               64      8    2.272    2.620  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      few_unique          256      8    2.248    2.602  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          rotated              64      8    2.220    2.373  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          all_same           1024      8    2.171    2.228  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Merge          reverse              64      8    2.109    2.346  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           all_same           1024      8    2.085    2.114  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   reverse             256      8    2.060    2.112  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      few_unique         1024      8    2.054    2.249  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      all_same             64      8    2.039    2.216  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          reverse            1024      8    2.019    2.108  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random               64      8    1.964    2.319  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      random              256      8    1.952    2.207  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      reverse              64      8    1.951    2.147  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      killer_quick        256      8    1.948    2.009  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      reverse            1024      8    1.927    2.404  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      few_unique           64      8    1.898    2.085  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Merge          reverse             256      8    1.896    1.929  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          killer_quick         64      8    1.876    2.172  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      sawtooth            256      8    1.876    2.040  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           reverse             256      8    1.872    1.907  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      random             1024      8    1.847    2.148  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      killer_quick         64      8    1.844    2.092  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      killer_quick       1024      8    1.839    2.024  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      rotated              64      8    1.791    1.882  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random_blocks       256      8    1.773    2.069  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      reverse            1024      8    1.757    2.154  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          killer_quick        256      8    1.744    1.798  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      random               64      8    1.744    1.958  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      pipe_organ         1024      8    1.733    1.849  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      two_values           64      8    1.719    1.922  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      nearly_sorted       256      8    1.683    2.192  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          few_unique          256      8    1.678    1.990  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           all_same            256      8    1.670    2.469  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          nearly_sorted       256      8    1.668    1.932  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          sawtooth             64      8    1.650    1.672  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Merge          reverse            1024      8    1.647    1.788  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      reverse             256      8    1.646    1.791  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      random_blocks        64      8    1.633    2.035  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      killer_quick        256      8    1.626    1.724  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      random_blocks        64      8    1.602    2.084  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          random              256      8    1.601    1.765  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      sawtooth             64      8    1.601    1.624  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          nearly_sorted      1024      8    1.599    1.743  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      sawtooth            256      8    1.593    1.789  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      pipe_organ           64      8    1.587    1.642  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          killer_quick       1024      8    1.585    1.758  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           reverse            1024      8    1.582    1.793  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      pipe_organ           64      8    1.574    1.716  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          all_same            256      8    1.564    2.211  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      two_values          256      8    1.550    1.775  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Selection      reverse              64      8    1.546    1.672  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Insertion      nearly_sorted        64      8    1.544    1.821  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      two_values           64      8    1.531    1.671  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          random_blocks        64      8    1.514    1.886  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          random               64      8    1.513    1.767  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      two_values         1024      8    1.512    1.654  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           two_values         1024      8    1.502    1.620  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          random             1024      8    1.494    1.753  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          sawtooth            256      8    1.482    1.710  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      pipe_organ          256      8    1.479    1.527  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      few_unique           64      8    1.476    1.672  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          random_blocks      1024      8    1.458    1.668  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          few_unique           64      8    1.444    1.635  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      random_blocks        64      8    1.436    1.631  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      nearly_sorted      1024      8    1.435    1.693  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           killer_quick         64      8    1.431    1.698  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          few_unique         1024      8    1.431    1.661  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      few_unique          256      8    1.414    1.877  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      pipe_organ          256      8    1.410    1.472  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   few_unique          256      8    1.374    1.664  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      random               64      8    1.366    1.608  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           sawtooth             64      8    1.322    1.344  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      pipe_organ         1024      8    1.296    1.476  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      interleaved        1024      8    1.296    1.548  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          interleaved        1024      8    1.281    1.454  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   sawtooth             64      8    1.280    1.320  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   killer_quick         64      8    1.272    1.497  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      few_unique         1024      8    1.265    1.380  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           few_unique          256      8    1.262    1.437  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           killer_quick        256      8    1.261    1.341  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           two_values          256      8    1.248    1.346  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      random              256      8    1.245    1.391  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      two_values           64      8    1.229    1.354  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           few_unique           64      8    1.225    1.335  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   killer_quick        256      8    1.223    1.259  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      two_values         1024      8    1.208    1.291  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          two_values         1024      8    1.191    1.322  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      random_blocks       256      8    1.188    1.257  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   few_unique           64      8    1.178    1.270  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          rotated            1024      8    1.163    1.320  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           few_unique         1024      8    1.159    1.422  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          two_values          256      8    1.156    1.261  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      random             1024      8    1.153    1.472  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           killer_quick       1024      8    1.134    1.169  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      sorted             1024      8    1.132    1.252  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_MI      random_blocks       256      8    1.131    1.210  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           sawtooth            256      8    1.118    1.261  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_Intro   random              256      8    1.113    1.252  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           pipe_organ          256      8    1.082    1.112  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          nearly_sorted        64      8    1.070    1.114  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           random             1024      8    1.067    1.225  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Merge          killer_quick         64      8    1.044    1.235  [42, 137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      two_values         1024      7    3.917    4.114  [42, 137, 1618, 2718, 3141, 9973, 65537]
+  Hybrid_RI      sawtooth            256      7    2.201    2.527  [137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      killer_quick         64      7    2.071    2.433  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Hybrid_Intro   reverse            1024      7    1.468    1.582  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Hybrid_RI      killer_quick       1024      7    1.444    1.492  [42, 137, 1618, 2718, 3141, 9973, 65537]
+  Hybrid_QI      nearly_sorted        64      7    1.294    1.403  [42, 1618, 2718, 3141, 9973, 31337, 65537]
+  Quick          pipe_organ           64      7    1.260    1.454  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Hybrid_QI      pipe_organ           64      7    1.196    1.279  [42, 137, 1618, 2718, 3141, 9973, 31337]
+  Heap           pipe_organ           64      7    1.187    1.268  [42, 137, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_RI      random               64      7    1.152    1.259  [137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Hybrid_QI      interleaved         256      7    1.149    1.161  [42, 137, 1618, 3141, 9973, 31337, 65537]
+  Quick          nearly_sorted      1024      7    1.100    1.127  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Hybrid_QI      sorted              256      7    1.095    1.262  [42, 137, 1618, 2718, 3141, 31337, 65537]
+  Hybrid_RI      rotated              64      7    1.094    1.158  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Hybrid_MI      two_values          256      7    1.091    1.182  [137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           two_values           64      7    1.086    1.176  [42, 1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          sorted             1024      7    1.080    1.184  [42, 137, 1618, 2718, 3141, 31337, 65537]
+  Radix          interleaved         256      7    1.071    1.104  [137, 1618, 2718, 3141, 9973, 31337, 65537]
+  Heap           random              256      7    1.067    1.157  [42, 137, 1618, 2718, 9973, 31337, 65537]
+  Quick          rotated              64      7    1.023    1.067  [42, 137, 1618, 2718, 3141, 9973, 31337]
+  Hybrid_RI      random              256      6    1.201    1.356  [137, 2718, 3141, 9973, 31337, 65537]
+  Heap           random_blocks        64      6    1.177    1.420  [42, 137, 1618, 2718, 31337, 65537]
+  Hybrid_RI      random             1024      6    1.156    1.353  [42, 1618, 2718, 3141, 9973, 31337]
+  Heap           random               64      6    1.111    1.174  [42, 137, 1618, 2718, 9973, 31337]
+  Hybrid_Intro   sawtooth            256      6    1.109    1.225  [137, 1618, 2718, 3141, 9973, 31337]
+  Hybrid_Intro   few_unique         1024      6    1.103    1.152  [42, 137, 1618, 3141, 9973, 65537]
+  Hybrid_RI      random_blocks       256      6    1.088    1.192  [42, 137, 1618, 2718, 31337, 65537]
+  Hybrid_MI      sawtooth           1024      6    1.075    1.205  [42, 1618, 2718, 3141, 31337, 65537]
+  Hybrid_RI      all_same           1024      6    1.063    1.075  [1618, 2718, 3141, 9973, 31337, 65537]
+  Radix          rotated             256      6    1.046    1.181  [42, 2718, 3141, 9973, 31337, 65537]
+  Quick          random_blocks       256      6    1.041    1.109  [42, 137, 1618, 2718, 31337, 65537]
+  Quick          nearly_sorted       256      5    1.225    1.329  [137, 1618, 2718, 3141, 9973]
+  Hybrid_RI      sawtooth           1024      5    1.114    1.224  [42, 1618, 3141, 9973, 65537]
+  Radix          sorted              256      5    1.099    1.231  [42, 137, 1618, 2718, 3141]
+  Hybrid_MI      nearly_sorted       256      5    1.087    1.164  [137, 1618, 2718, 3141, 9973]
+  Hybrid_Intro   killer_quick       1024      5    1.087    1.147  [2718, 3141, 9973, 31337, 65537]
+  Quick          two_values           64      5    1.071    1.131  [1618, 2718, 3141, 9973, 65537]
+  Hybrid_Intro   nearly_sorted       256      4    1.108    1.223  [137, 1618, 3141, 9973]
+  Hybrid_QI      random_blocks      1024      4    1.106    1.161  [3141, 9973, 31337, 65537]
+  Merge          killer_quick        256      4    1.020    1.032  [42, 9973, 31337, 65537]
+  Hybrid_QI      pipe_organ          256      4    1.020    1.037  [137, 1618, 2718, 9973]
+  Hybrid_Intro   random_blocks        64      3    1.221    1.313  [137, 1618, 2718]
+  Insertion      nearly_sorted       256      3    1.176    1.226  [42, 1618, 2718]
+  Hybrid_Intro   random               64      3    1.085    1.109  [137, 1618, 9973]
+  Merge          pipe_organ         1024      3    1.080    1.116  [137, 1618, 2718]
+  Hybrid_QI      sawtooth           1024      2    1.118    1.203  [42, 1618]
+  Merge          random_blocks        64      2    1.107    1.166  [137, 1618]
+  Merge          few_unique          256      2    1.086    1.115  [137, 1618]
+  Hybrid_Intro   random             1024      2    1.047    1.047  [31337, 65537]
+  Hybrid_Intro   two_values          256      2    1.038    1.067  [31337, 65537]
+
+  OCCASIONAL UPSETS (beaten in exactly 1 seed):
+  Algorithm      Input                 n  Speedup  Seed
+  ───────────────────────────────────────────────────────
+  Hybrid_QI      all_same            256    1.248  1618
+  Hybrid_MI      all_same            256    1.186  1618
+  Hybrid_MI      interleaved        1024    1.148  9973
+  Quick          interleaved        1024    1.125  9973
+  Insertion      killer_quick         64    1.120  137
+  Merge          random             1024    1.072  1618
+  Hybrid_Intro   two_values           64    1.066  3141
+  Merge          killer_quick       1024    1.046  31337
+  Hybrid_QI      pipe_organ         1024    1.013  1618
+  Insertion      two_values           64    1.012  42
+  Hybrid_RI      all_same            256    1.008  1618
+  Merge          random              256    1.008  9973
+  Merge          sawtooth            256    1.002  1618
+
+  BY COMPARISON COUNT (more stable than wall time):
+  Algorithm      Input                 n  Seeds   Mean ratio
+  ──────────────────────────────────────────────────────────
+  Merge          reverse              64      8        5.333
+  Merge          reverse             256      8        4.250
+  Hybrid_QI      reverse              64      8        3.850
+  Hybrid_Intro   reverse              64      8        3.850
+  Merge          reverse            1024      8        3.600
+  Insertion      sorted             1024      8        3.472
+  Insertion      all_same           1024      8        3.472
+  Insertion      interleaved        1024      8        3.472
+  Quick          reverse              64      8        2.768
+  Merge          pipe_organ           64      8        2.653
+  Hybrid_MI      rotated              64      8        2.607
+  Insertion      sorted              256      8        2.478
+  Insertion      all_same            256      8        2.478
+  Insertion      interleaved         256      8        2.478
+  Merge          random_blocks        64      8        2.287
+  Merge          pipe_organ          256      8        2.277
+  Hybrid_QI      reverse             256      8        2.262
+  Hybrid_Intro   reverse             256      8        2.262
+  Merge          killer_quick         64      8        2.169
+  Merge          pipe_organ         1024      8        2.043
+  Heap           reverse              64      8        1.950
+  Quick          reverse             256      8        1.895
+  Merge          random               64      8        1.892
+  Hybrid_MI      reverse              64      8        1.882
+  Merge          killer_quick        256      8        1.864
+  Hybrid_QI      sawtooth             64      8        1.834
+  Hybrid_Intro   sawtooth             64      8        1.834
+  Merge          sawtooth             64      8        1.821
+  Quick          killer_quick         64      8        1.821
+  Hybrid_MI      reverse             256      8        1.789
+  Merge          rotated              64      8        1.755
+  Hybrid_MI      reverse            1024      8        1.714
+  Quick          random_blocks        64      8        1.707
+  Merge          random              256      8        1.699
+  Merge          killer_quick       1024      8        1.685
+  Quick          sawtooth             64      8        1.677
+  Hybrid_QI      few_unique          256      8        1.674
+  Hybrid_Intro   few_unique          256      8        1.674
+  Quick          random               64      8        1.645
+  Hybrid_MI      random_blocks        64      8        1.636
+  Merge          few_unique           64      8        1.630
+  Hybrid_QI      few_unique           64      8        1.619
+  Hybrid_Intro   few_unique           64      8        1.619
+  Hybrid_MI      pipe_organ           64      8        1.618
+  Hybrid_QI      reverse            1024      8        1.602
+  Hybrid_Intro   reverse            1024      8        1.602
+  Merge          sawtooth            256      8        1.599
+  Hybrid_QI      killer_quick         64      8        1.573
+  Hybrid_Intro   killer_quick         64      8        1.573
+  Hybrid_MI      killer_quick         64      8        1.553
+  Merge          random             1024      8        1.547
+  Hybrid_QI      two_values           64      8        1.533
+  Hybrid_Intro   two_values           64      8        1.533
+  Hybrid_QI      random_blocks        64      8        1.532
+  Hybrid_Intro   random_blocks        64      8        1.532
+  Hybrid_QI      few_unique         1024      8        1.526
+  Hybrid_Intro   few_unique         1024      8        1.526
+  Hybrid_MI      pipe_organ          256      8        1.524
+  Merge          few_unique          256      8        1.522
+  Hybrid_QI      random               64      8        1.519
+  Hybrid_Intro   random               64      8        1.519
+  Hybrid_MI      sawtooth            256      8        1.501
+  Insertion      sorted               64      8        1.492
+  Insertion      all_same             64      8        1.492
+  Insertion      interleaved          64      8        1.492
+  Quick          killer_quick        256      8        1.484
+  Quick          random              256      8        1.479
+  Hybrid_MI      sawtooth             64      8        1.472
+  Quick          few_unique           64      8        1.471
+  Hybrid_MI      pipe_organ         1024      8        1.456
+  Hybrid_MI      random               64      8        1.443
+  Hybrid_MI      killer_quick        256      8        1.441
+  Quick          reverse            1024      8        1.429
+  Merge          few_unique         1024      8        1.412
+  Hybrid_MI      random_blocks       256      8        1.411
+  Hybrid_QI      killer_quick        256      8        1.405
+  Hybrid_Intro   killer_quick        256      8        1.405
+  Heap           reverse             256      8        1.401
+  Quick          few_unique          256      8        1.401
+  Hybrid_QI      random              256      8        1.387
+  Hybrid_Intro   random              256      8        1.387
+  Hybrid_MI      killer_quick       1024      8        1.367
+  Hybrid_MI      random              256      8        1.365
+  Hybrid_MI      few_unique           64      8        1.365
+  Merge          two_values           64      8        1.359
+  Quick          random             1024      8        1.342
+  Merge          random_blocks       256      8        1.332
+  Hybrid_MI      few_unique          256      8        1.313
+  Quick          few_unique         1024      8        1.299
+  Hybrid_QI      sawtooth            256      8        1.295
+  Hybrid_Intro   sawtooth            256      8        1.295
+  Hybrid_MI      random             1024      8        1.291
+  Hybrid_MI      two_values           64      8        1.290
+  Hybrid_QI      two_values          256      8        1.287
+  Hybrid_Intro   two_values          256      8        1.287
+  Quick          killer_quick       1024      8        1.285
+  Hybrid_QI      random             1024      8        1.279
+  Hybrid_Intro   random             1024      8        1.279
+  Hybrid_QI      killer_quick       1024      8        1.266
+  Hybrid_Intro   killer_quick       1024      8        1.266
+  Merge          two_values          256      8        1.265
+  Hybrid_MI      few_unique         1024      8        1.248
+  Quick          sawtooth            256      8        1.244
+  Hybrid_MI      two_values          256      8        1.224
+  Merge          two_values         1024      8        1.215
+  Hybrid_MI      two_values         1024      8        1.183
+  Quick          two_values           64      8        1.173
+  Heap           all_same           1024      8        1.159
+  Hybrid_QI      two_values         1024      8        1.139
+  Hybrid_Intro   two_values         1024      8        1.139
+  Quick          pipe_organ           64      8        1.137
+  Hybrid_MI      sawtooth           1024      8        1.125
+  Heap           reverse            1024      8        1.123
+  Quick          rotated              64      8        1.055
+  Heap           killer_quick         64      8        1.050
+  Heap           pipe_organ           64      8        1.019
+  Merge          sawtooth           1024      8        1.018
+  Hybrid_QI      pipe_organ           64      8        1.002
+  Hybrid_Intro   pipe_organ           64      8        1.002
+  Quick          two_values          256      7        1.048
+  Hybrid_MI      random_blocks      1024      7        1.041
+  Insertion      nearly_sorted        64      6        1.202
+  Hybrid_MI      nearly_sorted       256      5        1.016
+  Heap           random_blocks        64      4        1.178
+  Hybrid_MI      nearly_sorted      1024      4        1.005
+  (Radix has 0 comparisons by design — excluded from ratio.)
+
+
+======================================================================
+Q3: HYBRID ALGORITHM EFFECTIVENESS
+    (mean comparisons at n=1024, all inputs & seeds)
+======================================================================
+
+  For each hybrid: comparison count vs. both parents and Tim (n=1024)
+  Values are mean comparisons over all 8 seeds × all input types.
+
+  ─────────────────────────────────────────────────────────────────
+  Hybrid_QI  (combines Quick + Insertion)
+  Input               Hybrid_QI        Quick    Insertion          Tim      Winner
+  ─────────────────────────────────────────────────────────────────
+  random                 10,827       10,317      262,513       13,832       Quick
+  sorted                  7,047        8,716        1,023        3,552   Insertion
+  reverse                11,506       12,903      523,776       18,432   Hybrid_QI
+  nearly_sorted           7,800        9,210       31,464        7,104         Tim
+  few_unique              7,782        9,140      210,833       11,872   Hybrid_QI
+  sawtooth               11,027       11,240      236,798        7,399         Tim
+  pipe_organ             21,662       21,522      262,144       11,502         Tim
+  all_same                7,041        8,707        1,023        3,552   Insertion
+  two_values              7,704        8,911      133,176        8,773   Hybrid_QI
+  interleaved             7,047        8,716        1,023        3,552   Insertion
+  rotated                10,681       11,629      197,630        3,808         Tim
+  random_blocks          10,315       11,039      257,550        5,849         Tim
+  killer_quick            9,887        9,734      262,655       12,512       Quick
+
+  Hybrid_QI beats Quick: 10/13 input types
+  Hybrid_QI beats Insertion: 10/13 input types
+  Hybrid_QI beats Tim:    5/13 input types
+
+  ─────────────────────────────────────────────────────────────────
+  Hybrid_MI  (combines Merge + Insertion)
+  Input               Hybrid_MI        Merge    Insertion          Tim      Winner
+  ─────────────────────────────────────────────────────────────────
+  random                 10,714        8,941      262,513       13,832       Merge
+  sorted                  4,032        5,120        1,023        3,552   Insertion
+  reverse                10,752        5,120      523,776       18,432       Merge
+  nearly_sorted           7,110        7,839       31,464        7,104         Tim
+  few_unique              9,515        8,406      210,833       11,872       Merge
+  sawtooth                6,574        7,267      236,798        7,399   Hybrid_MI
+  pipe_organ              7,902        5,630      262,144       11,502       Merge
+  all_same                4,032        5,120        1,023        3,552   Insertion
+  two_values              7,418        7,220      133,176        8,773       Merge
+  interleaved             4,032        5,120        1,023        3,552   Insertion
+  rotated                 4,288        5,376      197,630        3,808         Tim
+  random_blocks           5,647        6,526      257,550        5,849   Hybrid_MI
+  killer_quick            9,152        7,424      262,655       12,512       Merge
+
+  Hybrid_MI beats Merge: 7/13 input types
+  Hybrid_MI beats Insertion: 10/13 input types
+  Hybrid_MI beats Tim:    8/13 input types
+
+  ─────────────────────────────────────────────────────────────────
+  Hybrid_RI  (combines Radix + Insertion)
+  Input               Hybrid_RI        Radix    Insertion          Tim      Winner
+  ─────────────────────────────────────────────────────────────────
+  random                      0            0      262,513       13,832   Hybrid_RI
+  sorted                      0            0        1,023        3,552   Hybrid_RI
+  reverse                     0            0      523,776       18,432   Hybrid_RI
+  nearly_sorted               0            0       31,464        7,104   Hybrid_RI
+  few_unique                  0            0      210,833       11,872   Hybrid_RI
+  sawtooth                    0            0      236,798        7,399   Hybrid_RI
+  pipe_organ                  0            0      262,144       11,502   Hybrid_RI
+  all_same                    0            0        1,023        3,552   Hybrid_RI
+  two_values                  0            0      133,176        8,773   Hybrid_RI
+  interleaved                 0            0        1,023        3,552   Hybrid_RI
+  rotated                     0            0      197,630        3,808   Hybrid_RI
+  random_blocks               0            0      257,550        5,849   Hybrid_RI
+  killer_quick                0            0      262,655       12,512   Hybrid_RI
+
+  Hybrid_RI beats Radix: 0/13 input types
+  Hybrid_RI beats Insertion: 13/13 input types
+  Hybrid_RI beats Tim:    13/13 input types
+
+  ─────────────────────────────────────────────────────────────────
+  Hybrid_Intro  (combines Quick + Heap)
+  Input            Hybrid_Intro        Quick         Heap          Tim      Winner
+  ─────────────────────────────────────────────────────────────────
+  random                 10,827       10,317       17,327       13,832       Quick
+  sorted                  7,047        8,716       18,060        3,552         Tim
+  reverse                11,506       12,903       16,407       18,432  Hybrid_Intro
+  nearly_sorted           7,800        9,210       17,959        7,104         Tim
+  few_unique              7,782        9,140       14,764       11,872  Hybrid_Intro
+  sawtooth               11,027       11,240       17,207        7,399         Tim
+  pipe_organ             22,884       21,522       17,658       11,502         Tim
+  all_same                7,041        8,707        3,066        3,552        Heap
+  two_values              7,704        8,911        9,709        8,773  Hybrid_Intro
+  interleaved             7,047        8,716       18,060        3,552         Tim
+  rotated                10,681       11,629       17,480        3,808         Tim
+  random_blocks          10,317       11,039       17,032        5,849         Tim
+  killer_quick            9,887        9,734       17,075       12,512       Quick
+
+  Hybrid_Intro beats Quick: 10/13 input types
+  Hybrid_Intro beats Heap: 11/13 input types
+  Hybrid_Intro beats Tim:    5/13 input types
+
+
+======================================================================
+BONUS: BEST ALGORITHM PER INPUT TYPE × SIZE  (by mean comparisons)
+======================================================================
+
+  Input                   n=64       n=256      n=1024
+  ───────────────────────────────────────────────────────
+  random                 Radix       Radix       Radix
+  sorted                 Radix       Radix       Radix
+  reverse                Radix       Radix       Radix
+  nearly_sorted          Radix       Radix       Radix
+  few_unique             Radix       Radix       Radix
+  sawtooth               Radix       Radix       Radix
+  pipe_organ             Radix       Radix       Radix
+  all_same               Radix       Radix       Radix
+  two_values             Radix       Radix       Radix
+  interleaved            Radix       Radix       Radix
+  rotated                Radix       Radix       Radix
+  random_blocks          Radix       Radix       Radix
+  killer_quick           Radix       Radix       Radix
