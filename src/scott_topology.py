@@ -520,7 +520,7 @@ output = {
     "principal_ideals": {nm: sorted(y for y in distinct_names if leq(y, nm)) for nm in distinct_names},
 }
 
-with open('/home/claude/scott_data.json', 'w') as f:
+with open('src/scott_data.json', 'w') as f:
     json.dump(output, f, indent=2)
 
 print("\n\nStructured data written to scott_data.json")

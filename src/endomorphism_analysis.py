@@ -433,7 +433,7 @@ output = {
     ],
 }
 
-with open('/home/claude/endo_data.json', 'w') as fout:
+with open('src/endo_data.json', 'w') as fout:
     json.dump(output, fout, indent=2)
 
 print(json.dumps({k:v for k,v in output.items() if k not in ('closure_operators','interior_operators','retract_images')}, indent=2))

@@ -1,1 +1,1241 @@
-{"note": "Run src/endomorphism_analysis.py to regenerate full data"}
+{
+  "total_endomorphisms": 12672,
+  "automorphisms": 1,
+  "idempotents": 1498,
+  "closures": 32,
+  "interiors": 8,
+  "constants": 8,
+  "image_size_distribution": {
+    "1": 8,
+    "2": 504,
+    "3": 3402,
+    "4": 5238,
+    "5": 2733,
+    "6": 723,
+    "7": 63,
+    "8": 1
+  },
+  "fixed_point_distribution": {
+    "0": 2548,
+    "1": 3038,
+    "2": 3210,
+    "3": 2203,
+    "4": 1111,
+    "5": 430,
+    "6": 114,
+    "7": 17,
+    "8": 1
+  },
+  "preserves_comparison": 11960,
+  "preserves_recursive_boundary": 128,
+  "retract_images": {
+    "['Bubble']": 1,
+    "['Insertion']": 1,
+    "['Selection']": 1,
+    "['Quick']": 1,
+    "['Merge']": 1,
+    "['Heap']": 1,
+    "['Radix']": 1,
+    "['Tim']": 1,
+    "['Bubble', 'Radix']": 2,
+    "['Bubble', 'Heap']": 28,
+    "['Bubble', 'Selection']": 14,
+    "['Bubble', 'Insertion']": 2,
+    "['Bubble', 'Quick']": 2,
+    "['Bubble', 'Merge']": 2,
+    "['Bubble', 'Tim']": 2,
+    "['Insertion', 'Tim']": 24,
+    "['Insertion', 'Radix']": 2,
+    "['Insertion', 'Selection']": 2,
+    "['Radix', 'Selection']": 2,
+    "['Heap', 'Selection']": 14,
+    "['Quick', 'Selection']": 2,
+    "['Merge', 'Selection']": 2,
+    "['Selection', 'Tim']": 2,
+    "['Quick', 'Tim']": 32,
+    "['Quick', 'Radix']": 2,
+    "['Merge', 'Quick']": 16,
+    "['Merge', 'Tim']": 16,
+    "['Merge', 'Radix']": 2,
+    "['Heap', 'Insertion']": 2,
+    "['Heap', 'Quick']": 2,
+    "['Heap', 'Merge']": 2,
+    "['Heap', 'Radix']": 2,
+    "['Heap', 'Tim']": 2,
+    "['Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Radix']": 16,
+    "['Bubble', 'Radix', 'Selection']": 8,
+    "['Bubble', 'Heap', 'Selection']": 75,
+    "['Bubble', 'Insertion', 'Tim']": 9,
+    "['Bubble', 'Insertion', 'Radix']": 1,
+    "['Bubble', 'Heap', 'Insertion']": 6,
+    "['Bubble', 'Insertion', 'Selection']": 3,
+    "['Bubble', 'Quick', 'Tim']": 12,
+    "['Bubble', 'Quick', 'Radix']": 1,
+    "['Bubble', 'Heap', 'Quick']": 6,
+    "['Bubble', 'Merge', 'Quick']": 6,
+    "['Bubble', 'Quick', 'Selection']": 3,
+    "['Bubble', 'Merge', 'Tim']": 6,
+    "['Bubble', 'Merge', 'Radix']": 1,
+    "['Bubble', 'Heap', 'Merge']": 6,
+    "['Bubble', 'Merge', 'Selection']": 3,
+    "['Bubble', 'Radix', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Tim']": 6,
+    "['Bubble', 'Selection', 'Tim']": 3,
+    "['Insertion', 'Radix', 'Tim']": 15,
+    "['Insertion', 'Quick', 'Tim']": 42,
+    "['Insertion', 'Merge', 'Tim']": 21,
+    "['Insertion', 'Selection', 'Tim']": 9,
+    "['Insertion', 'Radix', 'Selection']": 1,
+    "['Heap', 'Insertion', 'Selection']": 3,
+    "['Heap', 'Radix', 'Selection']": 8,
+    "['Quick', 'Selection', 'Tim']": 12,
+    "['Quick', 'Radix', 'Selection']": 1,
+    "['Heap', 'Quick', 'Selection']": 3,
+    "['Merge', 'Quick', 'Selection']": 6,
+    "['Merge', 'Selection', 'Tim']": 6,
+    "['Merge', 'Radix', 'Selection']": 1,
+    "['Heap', 'Merge', 'Selection']": 3,
+    "['Radix', 'Selection', 'Tim']": 1,
+    "['Heap', 'Selection', 'Tim']": 3,
+    "['Quick', 'Radix', 'Tim']": 20,
+    "['Merge', 'Quick', 'Tim']": 90,
+    "['Merge', 'Quick', 'Radix']": 10,
+    "['Merge', 'Radix', 'Tim']": 10,
+    "['Heap', 'Insertion', 'Tim']": 9,
+    "['Heap', 'Insertion', 'Radix']": 1,
+    "['Heap', 'Quick', 'Tim']": 12,
+    "['Heap', 'Quick', 'Radix']": 1,
+    "['Heap', 'Merge', 'Quick']": 6,
+    "['Heap', 'Merge', 'Tim']": 6,
+    "['Heap', 'Merge', 'Radix']": 1,
+    "['Heap', 'Radix', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Radix', 'Selection']": 26,
+    "['Bubble', 'Insertion', 'Radix', 'Tim']": 3,
+    "['Bubble', 'Heap', 'Insertion', 'Tim']": 24,
+    "['Bubble', 'Heap', 'Insertion', 'Radix']": 2,
+    "['Bubble', 'Insertion', 'Quick', 'Tim']": 8,
+    "['Bubble', 'Insertion', 'Merge', 'Tim']": 4,
+    "['Bubble', 'Insertion', 'Selection', 'Tim']": 12,
+    "['Bubble', 'Insertion', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Selection']": 4,
+    "['Bubble', 'Quick', 'Radix', 'Tim']": 4,
+    "['Bubble', 'Heap', 'Quick', 'Tim']": 32,
+    "['Bubble', 'Heap', 'Quick', 'Radix']": 2,
+    "['Bubble', 'Merge', 'Quick', 'Tim']": 12,
+    "['Bubble', 'Merge', 'Quick', 'Radix']": 2,
+    "['Bubble', 'Heap', 'Merge', 'Quick']": 16,
+    "['Bubble', 'Quick', 'Selection', 'Tim']": 16,
+    "['Bubble', 'Quick', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Heap', 'Quick', 'Selection']": 4,
+    "['Bubble', 'Merge', 'Quick', 'Selection']": 8,
+    "['Bubble', 'Merge', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Merge', 'Tim']": 16,
+    "['Bubble', 'Heap', 'Merge', 'Radix']": 2,
+    "['Bubble', 'Merge', 'Selection', 'Tim']": 8,
+    "['Bubble', 'Merge', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Heap', 'Merge', 'Selection']": 4,
+    "['Bubble', 'Heap', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Radix', 'Selection', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Selection', 'Tim']": 4,
+    "['Insertion', 'Quick', 'Radix', 'Tim']": 16,
+    "['Insertion', 'Merge', 'Quick', 'Tim']": 52,
+    "['Insertion', 'Merge', 'Radix', 'Tim']": 8,
+    "['Insertion', 'Radix', 'Selection', 'Tim']": 3,
+    "['Heap', 'Insertion', 'Selection', 'Tim']": 12,
+    "['Heap', 'Insertion', 'Radix', 'Selection']": 1,
+    "['Insertion', 'Quick', 'Selection', 'Tim']": 8,
+    "['Insertion', 'Merge', 'Selection', 'Tim']": 4,
+    "['Quick', 'Radix', 'Selection', 'Tim']": 4,
+    "['Heap', 'Quick', 'Selection', 'Tim']": 16,
+    "['Heap', 'Quick', 'Radix', 'Selection']": 1,
+    "['Merge', 'Quick', 'Selection', 'Tim']": 12,
+    "['Merge', 'Quick', 'Radix', 'Selection']": 2,
+    "['Heap', 'Merge', 'Quick', 'Selection']": 8,
+    "['Merge', 'Radix', 'Selection', 'Tim']": 2,
+    "['Heap', 'Merge', 'Selection', 'Tim']": 8,
+    "['Heap', 'Merge', 'Radix', 'Selection']": 1,
+    "['Heap', 'Radix', 'Selection', 'Tim']": 1,
+    "['Merge', 'Quick', 'Radix', 'Tim']": 33,
+    "['Heap', 'Insertion', 'Radix', 'Tim']": 3,
+    "['Heap', 'Insertion', 'Quick', 'Tim']": 8,
+    "['Heap', 'Insertion', 'Merge', 'Tim']": 4,
+    "['Heap', 'Quick', 'Radix', 'Tim']": 4,
+    "['Heap', 'Merge', 'Quick', 'Tim']": 12,
+    "['Heap', 'Merge', 'Quick', 'Radix']": 2,
+    "['Heap', 'Merge', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Insertion', 'Radix', 'Tim']": 6,
+    "['Bubble', 'Insertion', 'Quick', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Insertion', 'Quick', 'Tim']": 20,
+    "['Bubble', 'Insertion', 'Merge', 'Quick', 'Tim']": 5,
+    "['Bubble', 'Insertion', 'Merge', 'Radix', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Tim']": 10,
+    "['Bubble', 'Insertion', 'Radix', 'Selection', 'Tim']": 3,
+    "['Bubble', 'Heap', 'Insertion', 'Selection', 'Tim']": 15,
+    "['Bubble', 'Heap', 'Insertion', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Insertion', 'Quick', 'Selection', 'Tim']": 10,
+    "['Bubble', 'Insertion', 'Merge', 'Selection', 'Tim']": 5,
+    "['Bubble', 'Heap', 'Quick', 'Radix', 'Tim']": 8,
+    "['Bubble', 'Merge', 'Quick', 'Radix', 'Tim']": 3,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Tim']": 30,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Radix']": 4,
+    "['Bubble', 'Quick', 'Radix', 'Selection', 'Tim']": 4,
+    "['Bubble', 'Heap', 'Quick', 'Selection', 'Tim']": 20,
+    "['Bubble', 'Heap', 'Quick', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Merge', 'Quick', 'Selection', 'Tim']": 15,
+    "['Bubble', 'Merge', 'Quick', 'Radix', 'Selection']": 2,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Selection']": 10,
+    "['Bubble', 'Heap', 'Merge', 'Radix', 'Tim']": 4,
+    "['Bubble', 'Merge', 'Radix', 'Selection', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Merge', 'Selection', 'Tim']": 10,
+    "['Bubble', 'Heap', 'Merge', 'Radix', 'Selection']": 1,
+    "['Bubble', 'Heap', 'Radix', 'Selection', 'Tim']": 1,
+    "['Insertion', 'Merge', 'Quick', 'Radix', 'Tim']": 14,
+    "['Heap', 'Insertion', 'Radix', 'Selection', 'Tim']": 3,
+    "['Insertion', 'Quick', 'Radix', 'Selection', 'Tim']": 2,
+    "['Heap', 'Insertion', 'Quick', 'Selection', 'Tim']": 10,
+    "['Insertion', 'Merge', 'Quick', 'Selection', 'Tim']": 5,
+    "['Insertion', 'Merge', 'Radix', 'Selection', 'Tim']": 1,
+    "['Heap', 'Insertion', 'Merge', 'Selection', 'Tim']": 5,
+    "['Heap', 'Quick', 'Radix', 'Selection', 'Tim']": 4,
+    "['Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 3,
+    "['Heap', 'Merge', 'Quick', 'Selection', 'Tim']": 15,
+    "['Heap', 'Merge', 'Quick', 'Radix', 'Selection']": 2,
+    "['Heap', 'Merge', 'Radix', 'Selection', 'Tim']": 2,
+    "['Heap', 'Insertion', 'Quick', 'Radix', 'Tim']": 2,
+    "['Heap', 'Insertion', 'Merge', 'Quick', 'Tim']": 5,
+    "['Heap', 'Insertion', 'Merge', 'Radix', 'Tim']": 1,
+    "['Heap', 'Merge', 'Quick', 'Radix', 'Tim']": 3,
+    "['Bubble', 'Heap', 'Insertion', 'Quick', 'Radix', 'Tim']": 4,
+    "['Bubble', 'Insertion', 'Merge', 'Quick', 'Radix', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Quick', 'Tim']": 12,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Insertion', 'Radix', 'Selection', 'Tim']": 3,
+    "['Bubble', 'Insertion', 'Quick', 'Radix', 'Selection', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Insertion', 'Quick', 'Selection', 'Tim']": 12,
+    "['Bubble', 'Insertion', 'Merge', 'Quick', 'Selection', 'Tim']": 6,
+    "['Bubble', 'Insertion', 'Merge', 'Radix', 'Selection', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Selection', 'Tim']": 6,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Radix', 'Tim']": 6,
+    "['Bubble', 'Heap', 'Quick', 'Radix', 'Selection', 'Tim']": 4,
+    "['Bubble', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 3,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Selection', 'Tim']": 18,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Radix', 'Selection']": 2,
+    "['Bubble', 'Heap', 'Merge', 'Radix', 'Selection', 'Tim']": 2,
+    "['Heap', 'Insertion', 'Quick', 'Radix', 'Selection', 'Tim']": 2,
+    "['Insertion', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 1,
+    "['Heap', 'Insertion', 'Merge', 'Quick', 'Selection', 'Tim']": 6,
+    "['Heap', 'Insertion', 'Merge', 'Radix', 'Selection', 'Tim']": 1,
+    "['Heap', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 3,
+    "['Heap', 'Insertion', 'Merge', 'Quick', 'Radix', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Quick', 'Radix', 'Tim']": 2,
+    "['Bubble', 'Heap', 'Insertion', 'Quick', 'Radix', 'Selection', 'Tim']": 2,
+    "['Bubble', 'Insertion', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Quick', 'Selection', 'Tim']": 7,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Radix', 'Selection', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 3,
+    "['Heap', 'Insertion', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 1,
+    "['Bubble', 'Heap', 'Insertion', 'Merge', 'Quick', 'Radix', 'Selection', 'Tim']": 1
+  },
+  "closure_operators": [
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {},
+      "components_added": {}
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Heap"
+      },
+      "components_added": {
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Heap",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Heap",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Heap",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Merge",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Selection": "Heap"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Merge",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Insertion": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Insertion": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Merge",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Insertion": "Tim",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Selection",
+        "Insertion": "Tim",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Selection": "Heap"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Selection": "Heap",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Selection": "Heap",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Insertion",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Selection": "Heap",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Insertion": "Tim",
+        "Selection": "Heap"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Merge",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Quick": "Merge"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Merge"
+        ]
+      }
+    },
+    {
+      "image": [
+        "Heap",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Bubble": "Heap",
+        "Insertion": "Tim",
+        "Selection": "Heap",
+        "Quick": "Tim",
+        "Merge": "Tim"
+      },
+      "components_added": {
+        "Bubble": [
+          "Accelerate",
+          "Recurse",
+          "Select"
+        ],
+        "Insertion": [
+          "Accelerate",
+          "Merge",
+          "Recurse",
+          "Split"
+        ],
+        "Selection": [
+          "Accelerate",
+          "Recurse"
+        ],
+        "Quick": [
+          "Accelerate",
+          "Iterate",
+          "Merge",
+          "Shift"
+        ],
+        "Merge": [
+          "Accelerate",
+          "Iterate",
+          "Shift"
+        ]
+      }
+    }
+  ],
+  "interior_operators": [
+    {
+      "image": [
+        "Bubble",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Bubble",
+        "Merge": "Quick",
+        "Heap": "Bubble"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Bubble",
+        "Merge": "Quick"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Bubble",
+        "Heap": "Bubble"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Tim"
+      ],
+      "mapping": {
+        "Selection": "Bubble"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Merge": "Quick",
+        "Heap": "Selection"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Merge": "Quick"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {
+        "Heap": "Selection"
+      }
+    },
+    {
+      "image": [
+        "Bubble",
+        "Heap",
+        "Insertion",
+        "Merge",
+        "Quick",
+        "Radix",
+        "Selection",
+        "Tim"
+      ],
+      "mapping": {}
+    }
+  ]
+}

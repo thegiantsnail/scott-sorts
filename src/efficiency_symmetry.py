@@ -386,7 +386,7 @@ output = {
     },
 }
 
-with open('/home/claude/eff_sym_data.json', 'w') as fout:
+with open('src/eff_sym_data.json', 'w') as fout:
     json.dump(output, fout, indent=2)
 
 print("\n" + json.dumps(output['efficiency_distribution']))
