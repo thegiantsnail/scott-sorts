@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \":*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python src/batch_export.py --algos base --sizes 64,256 --seeds 42,137 --inputs random,reverse --format json --out src/smoke_test --trials 1 --top 8)",
+      "Bash(python src/batch_export.py --algos all --sizes 64,256,1024 --seeds 42,137,1618,2718,3141,9973,31337,65537 --inputs all --format both --out src/batch_results --trials 3 --top 15)"
+    ]
+  }
+}
