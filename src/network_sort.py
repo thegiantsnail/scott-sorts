@@ -12,9 +12,11 @@ Three structures implemented:
                        Each pushes (lows, highs) into a queue when done.
                        Sort_C runs phase-1 merges in two more threads, then phase-2.
 
-  3. PullSortNetwork — Sort_A and Sort_B expose lazy generator streams.
-                       Sort_C pulls from them via heapq; the 4-partition structure
-                       is retained for algorithmic tracking.
+    3. PullSortNetwork — Sort_A and Sort_B are exposed as generator-style
+                                         interfaces, but this implementation materializes each
+                                         side before merging. Sort_C then combines them via heapq;
+                                         the 4-partition structure is retained for algorithmic
+                                         tracking.
 
 Sort_C 4-partition merge:
   Knows: lows_X = sorted_X[:n//2],  highs_X = sorted_X[n//2:]
@@ -249,9 +251,8 @@ class PushSortNetwork:
 
 class PullSortNetwork:
     """
-    Pull model: Sort_C is the consumer. It requests sorted data from Sort_A and
-    Sort_B lazily. Implemented as: each node exposes a generator that yields
-    sorted elements one at a time; Sort_C drives both via heapq.merge.
+    Pull model: Sort_C is the consumer. The code keeps the pull-oriented shape
+    of the API, but each side is fully sorted before the merge step begins.
 
     For the 4-partition structure (comparison tracking) the full sort must
     complete before the first element is yielded — true streaming with partial

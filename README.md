@@ -8,6 +8,23 @@
 
 We construct a poset of sorting algorithms ordered by component-subset inclusion and study its Scott and Lawson topologies. The algorithms are decomposed into ur-components (Compare, Swap, Shift, Split, Merge, Select, Bucket, Iterate, Recurse, Accelerate), and the inclusion ordering on these component sets yields a partial order with genuine incomparabilities. The Scott topology on this 8-point poset has 56 open sets and coincides with the Alexandrov topology. The Lawson topology is discrete. We enumerate all 12,672 monotone endomorphisms (= Scott-continuous self-maps), identify 32 closure operators forming a Boolean lattice 2⁵, 8 interior operators, and a trivial automorphism group. We classify endomorphisms by efficiency, digraph symmetry, and semantic preservation, finding that only 128 of 12,672 maps (1%) respect the recursion boundary between iterative and recursive algorithms. We prove that de-optimization (removing acceleration structures) is not Scott-continuous, establishing a topological asymmetry between program improvement and degradation.
 
+## Presentation Snapshot
+
+- Distinct algorithms in the poset: 8
+- Scott-open sets: 56
+- Lawson-open sets: 256
+- Monotone endomorphisms: 12,672
+- Closure operators: 32
+- Interior operators: 8
+- Recursion-boundary-preserving maps: 128
+
+Suggested data sources for demos and slides:
+
+- [src/scott_data.json](src/scott_data.json) for the poset and topology tables.
+- [src/endo_data.json](src/endo_data.json) for endomorphism counts and operator summaries.
+- [src/benchmark_data.json](src/benchmark_data.json) and [src/test_results.json](src/test_results.json) for performance tables.
+- [demo.html](demo.html) — interactive browser demo: animated sorting with Markov chain routing and live transition matrix.
+
 ## 1. Introduction: Sorting Algorithms as Points in a Space
 
 Sorting algorithms are traditionally compared along a single axis — asymptotic time complexity — yielding a total preorder with many ties. Merge sort and heap sort both achieve O(n log n) worst case, yet they are fundamentally different computational objects: one builds new structures via divide-and-merge, the other mutates in place via an implicit tree.
@@ -348,6 +365,122 @@ These patterns are not coincidental — they are consequences of the poset's top
 - **Program transformation as continuous maps.** The interior and closure operators are now implemented as a source-to-source compiler in `src/sort_compiler.py` (Section 10). Extending to finer-grained transforms (loop unrolling, memoization, arbitrary data-structure replacement) remains open.
 - **Triplet and beyond.** Section 11 establishes that three-tier dispatch with a Radix mid-layer achieves sub-millisecond sorting at n=1024. Extending to four tiers (Radix outer → Merge mid → Quick mid-inner → Insertion inner) and studying the convergence of hybrid performance to theoretical lower bounds is an open direction.
 - **Galois connection.** The closure/interior operator pairing suggests a Galois connection between "upgrade" and "simplify" that could be formalized.
+- **Extended poset P\*.** `src/topology_navigator.py` identifies two new poset points, Net_QR = join(Quick, Radix) and Net_TR = join(Tim, Radix), expanding the Scott-open set count from 56 to 72. Characterising the full family of join-constructible algorithms and their continuous maps is an open direction.
+- **Adaptive topology navigation.** The Markov chain in `src/network_sort.py` empirically discovers phase boundaries without knowledge of P\*. Combining a topological prior (ur-component advantage weights per input feature) with the empirical transition matrix would give a fully principled Bayesian navigator.
+
+---
+
+## Appendix A: Empirical Data Tables
+
+Data from `src/test_results.json` (3,536 trials) and `src/triplet_results.json` (11,232 trials).
+All results are means over 8 deterministic seeds × 13 input classes unless noted.
+
+### A.1 Algorithm Performance at n = 1024
+
+| Algorithm | Mean comparisons | Mean wall time (ms) | vs. Tim |
+|-----------|----------------:|--------------------:|:-------:|
+| Radix | 0 | 0.463 | 2.5× faster |
+| Hybrid_QI | 10,025 | 0.840 | 1.4× faster |
+| Hybrid_RI | 0 | 1.006 | 1.1× faster |
+| Quick | 10,906 | 1.046 | 1.1× faster |
+| **Tim** | **8,595** | **1.144** | **—** |
+| Hybrid_MI | 7,013 | 1.230 | 1.1× slower |
+| Heap | 15,523 | 1.361 | 1.2× slower |
+| Merge | 6,547 | 1.573 | 1.4× slower |
+| Hybrid_Intro | 10,119 | 1.877 | 1.6× slower |
+| Insertion | 183,201 | 14.256 | 12.5× slower |
+
+*Bubble and Selection excluded at n=1024 (O(n²) timing budget exceeded).*
+
+### A.2 Input-Class Upsets (n = 1024)
+
+#### Radix vs. Tim — wall time ratio Tim÷Radix (Radix wins all 13 classes)
+
+| Input class | Tim÷Radix |
+|-------------|----------:|
+| few_unique | 9.9× |
+| two_values | 7.1× |
+| reverse | 4.3× |
+| pipe_organ | 3.5× |
+| killer_quick | 2.9× |
+| sawtooth | 2.4× |
+| random | 2.3× |
+| all_same | 2.2× |
+| nearly_sorted | 1.6× |
+| interleaved | 1.3× |
+| rotated | 1.2× |
+| random_blocks | 1.5× |
+| sorted | 1.1× |
+
+#### Insertion vs. Tim — wall time ratio Tim÷Insertion (Insertion wins 3 of 13)
+
+| Input class | Tim÷Insertion | Winner |
+|-------------|-------------:|:------:|
+| interleaved | 6.8× | Insertion |
+| all_same | 6.1× | Insertion |
+| sorted | 5.7× | Insertion |
+| nearly_sorted | 0.33× | Tim |
+| all others | < 0.15× | Tim |
+
+### A.3 Triplet Hybrid Rankings at n = 1024
+
+`T_XYZ` = outer X / mid Y / inner Z. HIGH_CUT = 128, LOW_CUT = 16.
+Tim baseline: 1.144 ms / 8,595 mean comparisons. **14 of 36 triplets beat Tim.**
+
+| Triplet | Mean ms | Mean comps | vs. Tim |
+|---------|--------:|-----------:|:-------:|
+| T_QRB (Quick/Radix/Bubble) | 0.773 | 4,712 | **1.48×** |
+| T_QRI (Quick/Radix/Insertion) | 0.776 | 4,703 | **1.47×** |
+| T_QRS (Quick/Radix/Selection) | 0.780 | 4,716 | **1.47×** |
+| T_MRS (Merge/Radix/Selection) | 0.784 | 2,233 | **1.46×** |
+| T_MRB (Merge/Radix/Bubble) | 0.787 | 2,233 | **1.45×** |
+| T_MRI (Merge/Radix/Insertion) | 0.787 | 2,233 | **1.45×** |
+| T_MQI (Merge/Quick/Insertion) | 0.865 | 7,565 | **1.32×** |
+| T_QQI (Quick/Quick/Insertion) | 0.905 | 10,025 | **1.26×** |
+| T_MQB (Merge/Quick/Bubble) | 0.979 | 8,721 | **1.17×** |
+| T_QQB (Quick/Quick/Bubble) | 0.987 | 11,060 | **1.16×** |
+| T_QMI (Quick/Merge/Insertion) | 1.019 | 8,638 | **1.12×** |
+| T_MMI (Merge/Merge/Insertion) | 1.020 | 7,013 | **1.12×** |
+| T_QMB (Quick/Merge/Bubble) | 1.089 | 9,393 | **1.05×** |
+| T_MQS (Merge/Quick/Selection) | 1.123 | 11,686 | **1.02×** |
+| *Tim baseline* | *1.144* | *8,595* | — |
+| T_MMB | 1.186 | 7,962 | 1.04× slower |
+| *(22 more, all ≥ 1.1× slower)* | … | … | |
+| T_MSI (Merge/Selection/Insertion) | 4.150 | 67,257 | 3.6× slower |
+
+All Selection-mid triplets finish below Tim; all Radix-mid triplets finish above it.
+
+### A.4 Extended Poset P* — Component Sets and Scott-Open Set Count
+
+| Poset | Points | Scott-open sets |
+|-------|-------:|----------------:|
+| P (base, 8 algorithms) | 8 | 56 |
+| P* (+ Net_QR + Net_TR) | 10 | **72** |
+
+| New point | ur-components | Position in P* |
+|-----------|---------------|----------------|
+| Net_QR = join(Quick, Radix) | Compare, Split, Recurse, Merge, Bucket, Iterate | Above Quick, Merge, Radix; incomparable to Tim and Heap |
+| Net_TR = join(Tim, Radix) | Compare, Shift, Split, Merge, Iterate, Recurse, Accelerate, Bucket | Above Tim, Net_QR, Radix; one of two maximal elements |
+
+The covering relation Radix → Net_QR adds one component ({Bucket} joins the comparison family). The covering relation Tim → Net_TR adds exactly one component ({Bucket}) to Tim's full set. Heap remains incomparable to both Net_QR and Net_TR.
+
+The 16 new Scott-open sets are all upward-closed subsets that require passing through Net_QR or Net_TR: {Net_QR}, {Net_TR}, {Net_QR, Net_TR}, {Radix, Net_QR, Net_TR}, {Merge, Net_QR, Net_TR}, {Quick, Merge, Net_QR, Net_TR}, {Tim, Net_QR, Net_TR}, and their unions with other upward-closed sets from P.
+
+### A.5 Pull Network Performance vs. Baselines (n = 1024, mean over 13 types × 8 seeds)
+
+| Configuration | Mean comps | Mean ms | vs. Tim |
+|---------------|----------:|--------:|:-------:|
+| Pull(Quick+Radix) | 5,592 | 1.447 | **1.6× faster** |
+| Quick (standalone) | 10,906 | 2.064 | **1.1× faster** |
+| Pull(Merge+Radix) | 4,203 | 2.049 | **1.1× faster** |
+| **Tim (standalone)** | **8,595** | **2.346** | — |
+| Pull(Merge+Quick) | 8,735 | 2.612 | 1.1× slower |
+| Pull(Quick+Merge) | 8,458 | 2.684 | 1.1× slower |
+| Merge (standalone) | 6,547 | 2.911 | 1.2× slower |
+
+Pull network timings use `src/benchmark_deep.py` instrumented sorts; standalone timings from `src/sort_test.py` use slightly different instrumentation, accounting for the apparent Tim discrepancy across tables.
+
+---
 
 ## References
 

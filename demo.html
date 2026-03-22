@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scott Sorts — Markov Chain Router Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;min-height:100vh;padding:12px}
+h1{font-size:1.3rem;font-weight:700;color:#a78bfa;margin-bottom:12px;letter-spacing:.02em}
+h2{font-size:.85rem;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:14px;margin-bottom:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.col{flex:1;min-width:220px}
+label{color:#8b949e;font-size:.8rem;margin-right:6px}
+select,input[type=range]{background:#0d1117;border:1px solid #30363d;color:#e6edf3;border-radius:4px;padding:3px 6px;font-size:.8rem}
+input[type=range]{padding:0;cursor:pointer}
+button{background:#7c3aed;border:none;color:#fff;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.82rem;font-weight:600;margin-right:6px;transition:background .15s}
+button:hover{background:#6d28d9}
+button.secondary{background:#21262d;color:#8b949e;border:1px solid #30363d}
+button.secondary:hover{background:#30363d;color:#e6edf3}
+button:disabled{opacity:.4;cursor:not-allowed}
+.toggle-btn{background:#21262d;border:1px solid #30363d;color:#8b949e}
+.toggle-btn.active{background:#7c3aed;color:#fff;border-color:#7c3aed}
+
+/* Visualiser */
+#viz-canvas{width:100%;height:160px;display:flex;align-items:flex-end;gap:1px;padding:4px 0;position:relative}
+.bar{flex:1;min-width:2px;border-radius:2px 2px 0 0;transition:height .05s;position:relative}
+.bar.default{background:linear-gradient(to top,#1e4a6e,#38bdf8)}
+.bar.comparing{background:linear-gradient(to top,#92400e,#fbbf24)}
+.bar.swapping{background:linear-gradient(to top,#7f1d1d,#f87171)}
+.bar.sorted{background:linear-gradient(to top,#14532d,#4ade80)}
+.bar.bucket{background:linear-gradient(to top,#164e63,#22d3ee)}
+.bar.pivot{background:linear-gradient(to top,#7c2d12,#fb923c)}
+.viz-info{font-size:.75rem;color:#8b949e;margin-top:4px}
+
+/* Race panel */
+#race-panel{display:none}
+.race-row{display:flex;align-items:center;margin-bottom:6px;gap:8px}
+.race-label{width:72px;font-size:.8rem;font-weight:600;flex-shrink:0}
+.race-track{flex:1;background:#0d1117;border-radius:3px;height:18px;position:relative;overflow:hidden}
+.race-bar{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.25,.46,.45,.94);width:0}
+.race-count{font-size:.75rem;color:#8b949e;width:52px;text-align:right;flex-shrink:0}
+.race-winner-badge{font-size:.7rem;color:#fbbf24;font-weight:700;margin-left:4px}
+
+/* Markov chain */
+.chain-scroll{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;min-height:24px}
+.badge{display:inline-block;padding:2px 7px;border-radius:12px;font-size:.72rem;font-weight:700;color:#fff}
+.markov-grid{display:grid;grid-template-columns:24px repeat(5,1fr);gap:1px;font-size:.68rem}
+.mg-header{background:#21262d;text-align:center;padding:2px;border-radius:2px;font-weight:700}
+.mg-row-label{background:#21262d;text-align:center;padding:2px;border-radius:2px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.mg-cell{text-align:center;padding:2px 1px;border-radius:2px;font-size:.65rem;min-height:20px;display:flex;align-items:center;justify-content:center}
+.prediction-box{background:#21262d;border-radius:5px;padding:8px;margin-bottom:8px;font-size:.8rem}
+.prediction-box span{font-weight:700}
+
+/* Poset footer */
+#poset-svg{width:100%;height:140px}
+.poset-node{cursor:default}
+.poset-label{font-size:10px;font-weight:600;text-anchor:middle}
+.poset-edge{stroke:#30363d;stroke-width:1.5;fill:none}
+.ur-components{font-size:.75rem;color:#8b949e;margin-top:6px;text-align:center}
+
+/* Status bar */
+#status{font-size:.75rem;color:#8b949e;margin-bottom:8px;min-height:16px}
+.alg-name{font-weight:700}
+
+/* colours */
+.c-ins{color:#38bdf8} .c-qui{color:#f87171} .c-mer{color:#fbbf24} .c-tim{color:#34d399} .c-rad{color:#a78bfa}
+.bg-ins{background:#38bdf8} .bg-qui{background:#f87171} .bg-mer{background:#fbbf24} .bg-tim{background:#34d399} .bg-rad{background:#a78bfa}
+</style>
+</head>
+<body>
+<h1>Scott Sorts — Markov Chain Router</h1>
+
+<div class="row">
+  <div class="col" style="min-width:300px">
+    <div class="card">
+      <h2>Controls</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
+        <div>
+          <label>Input</label>
+          <select id="input-type">
+            <option value="random">Random</option>
+            <option value="nearly_sorted">Nearly Sorted</option>
+            <option value="few_unique">Few Unique</option>
+            <option value="sorted">Sorted</option>
+            <option value="reverse">Reverse</option>
+            <option value="interleaved">Interleaved</option>
+            <option value="all_same">All Same</option>
+            <option value="sawtooth">Sawtooth</option>
+          </select>
+        </div>
+        <div>
+          <label>Size <span id="size-val">60</span></label>
+          <input type="range" id="size-slider" min="20" max="120" value="60" style="width:80px">
+        </div>
+        <div>
+          <label>Speed <span id="speed-val">40</span>ms</label>
+          <input type="range" id="speed-slider" min="5" max="200" value="40" style="width:80px">
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button id="btn-race">Race</button>
+        <button class="secondary" id="btn-new">New Array</button>
+        <select id="alg-select" style="font-size:.8rem">
+          <option value="insertion">Insertion</option>
+          <option value="quick">Quick</option>
+          <option value="merge">Merge</option>
+          <option value="tim">Tim</option>
+          <option value="radix">Radix</option>
+        </select>
+        <button class="secondary" id="btn-animate">Animate</button>
+        <button class="toggle-btn" id="btn-auto">Auto Loop</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Visualiser</h2>
+      <div id="status">Ready — generate an array and press Race or Animate.</div>
+      <div id="viz-canvas"></div>
+      <div class="viz-info" id="viz-info"></div>
+    </div>
+
+    <div id="race-panel" class="card">
+      <h2>Race Results</h2>
+      <div id="race-rows"></div>
+    </div>
+  </div>
+
+  <div class="col" style="min-width:260px">
+    <div class="card">
+      <h2>Markov Chain Router</h2>
+      <div class="prediction-box" id="prediction-box">Prediction: <span>—</span> · Race to begin chain.</div>
+      <div style="margin-bottom:6px;font-size:.75rem;color:#8b949e">Last 12 winners</div>
+      <div class="chain-scroll" id="chain-scroll"></div>
+      <h2 style="margin-top:8px">Transition Matrix</h2>
+      <div class="markov-grid" id="markov-grid"></div>
+    </div>
+
+    <div class="card">
+      <h2>Poset — Scott Topology</h2>
+      <svg id="poset-svg" viewBox="0 0 460 140"></svg>
+      <div class="ur-components" id="ur-components">ur-components: —</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+const ALG_NAMES = ['Insertion','Quick','Merge','Tim','Radix'];
+const ALG_ABBR  = ['Ins','Qck','Mrg','Tim','Rad'];
+const ALG_KEYS  = ['insertion','quick','merge','tim','radix'];
+const ALG_COLORS= ['#38bdf8','#f87171','#fbbf24','#34d399','#a78bfa'];
+
+const UR_COMPONENTS = {
+  insertion: 'Compare, Shift, Iterate',
+  quick:     'Compare, Split, Recurse',
+  merge:     'Compare, Split, Merge, Recurse',
+  tim:       'Compare, Shift, Split, Merge, Iterate, Recurse, Accelerate',
+  radix:     'Bucket, Iterate'
+};
+
+// Markov state
+let markovMatrix = Array.from({length:5},()=>Array(5).fill(0));
+let lastWinner = -1;
+let chainHistory = [];
+
+// Array state
+let currentArray = [];
+let animating = false;
+let autoLoop = false;
+let autoTimer = null;
+let raceCount = 0;
+
+// ── Array Generators ───────────────────────────────────────────────────────
+function generateArray(type, n) {
+  const a = [];
+  switch(type) {
+    case 'random':
+      for(let i=0;i<n;i++) a.push(Math.floor(Math.random()*n)+1);
+      break;
+    case 'nearly_sorted':
+      for(let i=0;i<n;i++) a.push(i+1);
+      for(let i=0;i<Math.max(1,Math.floor(n*0.05));i++){
+        const x=Math.floor(Math.random()*n), y=Math.floor(Math.random()*n);
+        [a[x],a[y]]=[a[y],a[x]];
+      }
+      break;
+    case 'few_unique':
+      const vals=[1,Math.ceil(n/3),Math.ceil(2*n/3),n];
+      for(let i=0;i<n;i++) a.push(vals[Math.floor(Math.random()*vals.length)]);
+      break;
+    case 'sorted':
+      for(let i=0;i<n;i++) a.push(i+1);
+      break;
+    case 'reverse':
+      for(let i=n;i>=1;i--) a.push(i);
+      break;
+    case 'interleaved':
+      for(let i=0;i<n;i++) a.push(i%2===0?i/2+1:n-Math.floor(i/2));
+      break;
+    case 'all_same':
+      for(let i=0;i<n;i++) a.push(Math.ceil(n/2));
+      break;
+    case 'sawtooth':
+      const teeth=5, perTooth=Math.ceil(n/teeth);
+      for(let i=0;i<n;i++) a.push((i%perTooth)+1);
+      break;
+    default:
+      for(let i=0;i<n;i++) a.push(Math.floor(Math.random()*n)+1);
+  }
+  return a;
+}
+
+// ── Fast Sorting (no animation, returns {sorted, comparisons}) ─────────────
+function fastInsertionSort(arr) {
+  const a=[...arr]; let cmp=0;
+  for(let i=1;i<a.length;i++){
+    const key=a[i]; let j=i-1;
+    while(j>=0&&(++cmp,a[j]>key)){a[j+1]=a[j];j--;}
+    a[j+1]=key;
+  }
+  return {sorted:a,comparisons:cmp};
+}
+
+function fastQuickSort(arr) {
+  const a=[...arr]; let cmp=0;
+  function med3(i,j,k){
+    cmp++;cmp++;
+    if((a[i]<=a[j])!=(a[i]<=a[k])) return i;
+    if((a[j]<=a[i])!=(a[j]<=a[k])) return j;
+    return k;
+  }
+  function qs(lo,hi){
+    if(hi-lo<1) return;
+    const m=med3(lo,Math.floor((lo+hi)/2),hi);
+    [a[m],a[hi]]=[a[hi],a[m]];
+    const pv=a[hi]; let i=lo-1;
+    for(let j=lo;j<hi;j++){cmp++;if(a[j]<=pv){i++;[a[i],a[j]]=[a[j],a[i]];}}
+    [a[i+1],a[hi]]=[a[hi],a[i+1]];
+    const p=i+1; qs(lo,p-1); qs(p+1,hi);
+  }
+  qs(0,a.length-1);
+  return {sorted:a,comparisons:cmp};
+}
+
+function fastMergeSort(arr) {
+  const a=[...arr]; let cmp=0;
+  function ms(lo,hi){
+    if(hi<=lo) return;
+    const mid=Math.floor((lo+hi)/2);
+    ms(lo,mid); ms(mid+1,hi);
+    const left=a.slice(lo,mid+1), right=a.slice(mid+1,hi+1);
+    let i=0,j=0,k=lo;
+    while(i<left.length&&j<right.length){cmp++;a[k++]=(left[i]<=right[j])?left[i++]:right[j++];}
+    while(i<left.length) a[k++]=left[i++];
+    while(j<right.length) a[k++]=right[j++];
+  }
+  ms(0,a.length-1);
+  return {sorted:a,comparisons:cmp};
+}
+
+function fastTimSort(arr) {
+  const a=[...arr]; let cmp=0; const RUN=32;
+  for(let i=0;i<a.length;i+=RUN){
+    const end=Math.min(i+RUN-1,a.length-1);
+    for(let j=i+1;j<=end;j++){
+      const key=a[j]; let k=j-1;
+      while(k>=i&&(++cmp,a[k]>key)){a[k+1]=a[k];k--;}
+      a[k+1]=key;
+    }
+  }
+  for(let size=RUN;size<a.length;size*=2){
+    for(let lo=0;lo<a.length;lo+=2*size){
+      const mid=Math.min(lo+size-1,a.length-1);
+      const hi=Math.min(lo+2*size-1,a.length-1);
+      if(mid>=hi) continue;
+      const left=a.slice(lo,mid+1),right=a.slice(mid+1,hi+1);
+      let i=0,j=0,k=lo;
+      while(i<left.length&&j<right.length){cmp++;a[k++]=(left[i]<=right[j])?left[i++]:right[j++];}
+      while(i<left.length) a[k++]=left[i++];
+      while(j<right.length) a[k++]=right[j++];
+    }
+  }
+  return {sorted:a,comparisons:cmp};
+}
+
+function fastRadixSort(arr) {
+  let a=[...arr];
+  const max=Math.max(...a,1);
+  for(let exp=1;Math.floor(max/exp)>0;exp*=10){
+    const buckets=Array.from({length:10},()=>[]);
+    for(const v of a) buckets[Math.floor(v/exp)%10].push(v);
+    a=buckets.flat();
+  }
+  return {sorted:a,comparisons:0};
+}
+
+const FAST_SORTS = {
+  insertion: fastInsertionSort,
+  quick: fastQuickSort,
+  merge: fastMergeSort,
+  tim: fastTimSort,
+  radix: fastRadixSort
+};
+
+// ── Animated Sorting Generators ────────────────────────────────────────────
+async function* animInsertionSort(arr) {
+  const a=[...arr];
+  for(let i=1;i<a.length;i++){
+    const key=a[i]; let j=i-1;
+    yield {arr:[...a],comparing:[i],swapping:[]};
+    while(j>=0){
+      yield {arr:[...a],comparing:[j,j+1],swapping:[]};
+      if(a[j]>key){a[j+1]=a[j]; yield {arr:[...a],comparing:[],swapping:[j+1,j]};j--;}
+      else break;
+    }
+    a[j+1]=key;
+    yield {arr:[...a],comparing:[],swapping:[]};
+  }
+  yield {arr:[...a],done:true};
+}
+
+async function* animQuickSort(arr) {
+  const a=[...arr];
+  const steps=[];
+  function qs(lo,hi){
+    if(hi-lo<1) return;
+    const m=Math.floor((lo+hi)/2);
+    // median of 3
+    let pi=lo;
+    if(a[m]<a[lo]) {[a[m],a[lo]]=[a[lo],a[m]]; steps.push({arr:[...a],comparing:[lo,m],swapping:[lo,m]});}
+    if(a[hi]<a[lo]) {[a[hi],a[lo]]=[a[lo],a[hi]]; steps.push({arr:[...a],comparing:[lo,hi],swapping:[lo,hi]});}
+    if(a[m]<a[hi]) {[a[m],a[hi]]=[a[hi],a[m]]; steps.push({arr:[...a],comparing:[m,hi],swapping:[m,hi]});}
+    steps.push({arr:[...a],pivot:hi,comparing:[hi],swapping:[]});
+    const pv=a[hi]; let i=lo-1;
+    for(let j=lo;j<hi;j++){
+      steps.push({arr:[...a],pivot:hi,comparing:[j,hi],swapping:[]});
+      if(a[j]<=pv){i++;[a[i],a[j]]=[a[j],a[i]];steps.push({arr:[...a],pivot:hi,comparing:[],swapping:[i,j]});}
+    }
+    [a[i+1],a[hi]]=[a[hi],a[i+1]];
+    steps.push({arr:[...a],comparing:[],swapping:[i+1,hi]});
+    const p=i+1; qs(lo,p-1); qs(p+1,hi);
+  }
+  qs(0,a.length-1);
+  for(const s of steps) yield s;
+  yield {arr:[...a],done:true};
+}
+
+async function* animMergeSort(arr) {
+  const a=[...arr];
+  const steps=[];
+  function ms(lo,hi){
+    if(hi<=lo) return;
+    const mid=Math.floor((lo+hi)/2);
+    ms(lo,mid); ms(mid+1,hi);
+    const left=a.slice(lo,mid+1),right=a.slice(mid+1,hi+1);
+    let i=0,j=0,k=lo;
+    while(i<left.length&&j<right.length){
+      steps.push({arr:[...a],comparing:[lo+i,mid+1+j],swapping:[]});
+      if(left[i]<=right[j]){a[k++]=left[i++];}else{a[k++]=right[j++];}
+      steps.push({arr:[...a],comparing:[],swapping:[k-1]});
+    }
+    while(i<left.length){a[k++]=left[i++];steps.push({arr:[...a],comparing:[],swapping:[k-1]});}
+    while(j<right.length){a[k++]=right[j++];steps.push({arr:[...a],comparing:[],swapping:[k-1]});}
+  }
+  ms(0,a.length-1);
+  for(const s of steps) yield s;
+  yield {arr:[...a],done:true};
+}
+
+async function* animTimSort(arr) {
+  const a=[...arr]; const RUN=32;
+  const steps=[];
+  for(let i=0;i<a.length;i+=RUN){
+    const end=Math.min(i+RUN-1,a.length-1);
+    for(let j=i+1;j<=end;j++){
+      const key=a[j]; let k=j-1;
+      steps.push({arr:[...a],comparing:[j],swapping:[]});
+      while(k>=i&&a[k]>key){a[k+1]=a[k];steps.push({arr:[...a],comparing:[k,k+1],swapping:[k+1]});k--;}
+      a[k+1]=key; steps.push({arr:[...a],comparing:[],swapping:[]});
+    }
+  }
+  for(let size=RUN;size<a.length;size*=2){
+    for(let lo=0;lo<a.length;lo+=2*size){
+      const mid=Math.min(lo+size-1,a.length-1);
+      const hi=Math.min(lo+2*size-1,a.length-1);
+      if(mid>=hi) continue;
+      const left=a.slice(lo,mid+1),right=a.slice(mid+1,hi+1);
+      let i=0,j=0,k=lo;
+      while(i<left.length&&j<right.length){
+        steps.push({arr:[...a],comparing:[lo+i,mid+1+j],swapping:[]});
+        if(left[i]<=right[j]){a[k++]=left[i++];}else{a[k++]=right[j++];}
+        steps.push({arr:[...a],comparing:[],swapping:[k-1]});
+      }
+      while(i<left.length){a[k++]=left[i++];steps.push({arr:[...a],comparing:[],swapping:[k-1]});}
+      while(j<right.length){a[k++]=right[j++];steps.push({arr:[...a],comparing:[],swapping:[k-1]});}
+    }
+  }
+  for(const s of steps) yield s;
+  yield {arr:[...a],done:true};
+}
+
+async function* animRadixSort(arr) {
+  let a=[...arr];
+  const max=Math.max(...a,1);
+  for(let exp=1;Math.floor(max/exp)>0;exp*=10){
+    const buckets=Array.from({length:10},()=>[]);
+    for(let i=0;i<a.length;i++){
+      const d=Math.floor(a[i]/exp)%10;
+      yield {arr:[...a],bucket:[i],bucketDigit:d,swapping:[]};
+      buckets[d].push(a[i]);
+    }
+    a=buckets.flat();
+    yield {arr:[...a],comparing:[],swapping:[],gatherDone:true};
+  }
+  yield {arr:[...a],done:true};
+}
+
+const ANIM_SORTS = {insertion:animInsertionSort,quick:animQuickSort,merge:animMergeSort,tim:animTimSort,radix:animRadixSort};
+
+// ── Visualiser ─────────────────────────────────────────────────────────────
+const vizCanvas = document.getElementById('viz-canvas');
+const vizInfo   = document.getElementById('viz-info');
+const statusEl  = document.getElementById('status');
+
+function renderBars(arr, state={}) {
+  const max = Math.max(...arr, 1);
+  const {comparing=[], swapping=[], bucket=[], sorted=false, pivot=-1} = state;
+  vizCanvas.innerHTML='';
+  arr.forEach((v,i)=>{
+    const bar=document.createElement('div');
+    bar.className='bar';
+    const pct=Math.max(4,(v/max)*100);
+    bar.style.height=pct+'%';
+    if(sorted) bar.classList.add('sorted');
+    else if(bucket.includes(i)) bar.classList.add('bucket');
+    else if(swapping.includes(i)) bar.classList.add('swapping');
+    else if(comparing.includes(i)) bar.classList.add('comparing');
+    else if(i===pivot) bar.classList.add('pivot');
+    else bar.classList.add('default');
+    vizCanvas.appendChild(bar);
+  });
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function runAnimation(algKey, arr) {
+  animating=true;
+  setButtonsDisabled(true);
+  const gen = ANIM_SORTS[algKey](arr);
+  const speedSlider=document.getElementById('speed-slider');
+  let stepCount=0;
+  for await(const step of gen){
+    if(!animating) break;
+    const delay=parseInt(speedSlider.value);
+    renderBars(step.arr||arr, step);
+    stepCount++;
+    vizInfo.textContent = `Algorithm: ${ALG_NAMES[ALG_KEYS.indexOf(algKey)]}  ·  Step: ${stepCount}`;
+    if(step.done){
+      renderBars(step.arr, {sorted:true});
+      statusEl.textContent = `${ALG_NAMES[ALG_KEYS.indexOf(algKey)]} — sorted!`;
+    } else {
+      await sleep(delay);
+    }
+  }
+  animating=false;
+  setButtonsDisabled(false);
+}
+
+function setButtonsDisabled(dis) {
+  ['btn-race','btn-new','btn-animate','btn-auto','alg-select','input-type','size-slider','speed-slider'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.disabled=dis;
+  });
+}
+
+// ── Race ───────────────────────────────────────────────────────────────────
+function runRace(arr) {
+  const results = ALG_KEYS.map(k => {
+    const r = FAST_SORTS[k]([...arr]);
+    return {key:k, comparisons:r.comparisons};
+  });
+  return results;
+}
+
+function showRacePanel(results, winnerIdx) {
+  const panel = document.getElementById('race-panel');
+  const rowsEl = document.getElementById('race-rows');
+  panel.style.display='block';
+  rowsEl.innerHTML='';
+  const maxCmp = Math.max(...results.map(r=>r.comparisons), 1);
+  results.forEach((r,i)=>{
+    const isWinner = (i===winnerIdx);
+    const row=document.createElement('div');
+    row.className='race-row';
+    const label=document.createElement('div');
+    label.className='race-label';
+    label.style.color=ALG_COLORS[i];
+    label.textContent=ALG_NAMES[i];
+    const track=document.createElement('div');
+    track.className='race-track';
+    const bar=document.createElement('div');
+    bar.className='race-bar';
+    bar.style.background=ALG_COLORS[i];
+    bar.style.width='0%';
+    track.appendChild(bar);
+    const count=document.createElement('div');
+    count.className='race-count';
+    count.textContent=r.comparisons===0?'0 (buckets)':r.comparisons.toLocaleString();
+    const winBadge=document.createElement('span');
+    winBadge.className='race-winner-badge';
+    winBadge.textContent=isWinner?'★ winner':'';
+    row.appendChild(label); row.appendChild(track); row.appendChild(count); row.appendChild(winBadge);
+    rowsEl.appendChild(row);
+    // animate bar after brief delay
+    setTimeout(()=>{
+      const w = r.comparisons===0 ? (isWinner?100:2) : (r.comparisons/maxCmp)*100;
+      bar.style.width=Math.max(2,w)+'%';
+    },50+i*80);
+  });
+}
+
+function determineWinner(results) {
+  // Winner = fewest comparisons; radix (0) wins if all others > 0
+  let minIdx=0, minVal=Infinity;
+  results.forEach((r,i)=>{
+    // treat radix 0 as tied-best only if others have large counts
+    const effective = r.comparisons===0 ? 0 : r.comparisons;
+    if(effective<minVal){minVal=effective;minIdx=i;}
+  });
+  return minIdx;
+}
+
+// ── Markov Chain ───────────────────────────────────────────────────────────
+function updateMarkov(winnerIdx) {
+  if(lastWinner>=0){
+    markovMatrix[lastWinner][winnerIdx]++;
+  }
+  lastWinner=winnerIdx;
+  chainHistory.push(winnerIdx);
+  if(chainHistory.length>12) chainHistory.shift();
+  renderChain();
+  renderMarkovMatrix();
+  updatePrediction();
+}
+
+function renderChain() {
+  const el=document.getElementById('chain-scroll');
+  el.innerHTML='';
+  chainHistory.forEach(idx=>{
+    const b=document.createElement('span');
+    b.className='badge';
+    b.style.background=ALG_COLORS[idx];
+    b.style.color='#0d1117';
+    b.textContent=ALG_ABBR[idx];
+    el.appendChild(b);
+  });
+}
+
+function renderMarkovMatrix() {
+  const grid=document.getElementById('markov-grid');
+  grid.innerHTML='';
+  // top-left empty
+  const empty=document.createElement('div');
+  empty.className='mg-header';
+  empty.textContent='→';
+  grid.appendChild(empty);
+  // column headers
+  ALG_ABBR.forEach((ab,i)=>{
+    const h=document.createElement('div');
+    h.className='mg-header';
+    h.style.color=ALG_COLORS[i];
+    h.textContent=ab;
+    grid.appendChild(h);
+  });
+  // rows
+  markovMatrix.forEach((row,i)=>{
+    const rowLbl=document.createElement('div');
+    rowLbl.className='mg-row-label';
+    rowLbl.style.color=ALG_COLORS[i];
+    rowLbl.textContent=ALG_ABBR[i];
+    grid.appendChild(rowLbl);
+    const rowSum=row.reduce((a,b)=>a+b,0);
+    row.forEach((v,j)=>{
+      const cell=document.createElement('div');
+      cell.className='mg-cell';
+      const prob=rowSum>0?v/rowSum:0;
+      cell.style.background=`rgba(${hexToRgb(ALG_COLORS[j])},${prob*0.85+0.05})`;
+      cell.style.color=prob>0.3?'#0d1117':'#8b949e';
+      cell.textContent=prob>0?prob.toFixed(2):'·';
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16);
+  const g=parseInt(hex.slice(3,5),16);
+  const b=parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function updatePrediction() {
+  const box=document.getElementById('prediction-box');
+  if(lastWinner<0){box.innerHTML='Prediction: <span>—</span> · Race to begin chain.';return;}
+  const row=markovMatrix[lastWinner];
+  const rowSum=row.reduce((a,b)=>a+b,0);
+  if(rowSum===0){box.innerHTML=`Prediction: <span>—</span> · No data from ${ALG_NAMES[lastWinner]} yet.`;return;}
+  let bestIdx=0;
+  row.forEach((v,i)=>{if(v>row[bestIdx])bestIdx=i;});
+  box.innerHTML=`Last winner: <span style="color:${ALG_COLORS[lastWinner]}">${ALG_NAMES[lastWinner]}</span> · Predicts next: <span style="color:${ALG_COLORS[bestIdx]}">${ALG_NAMES[bestIdx]}</span>`;
+}
+
+// ── Poset ──────────────────────────────────────────────────────────────────
+// Poset: Bubble<Selection<Heap; Insertion<Tim; Quick<Merge<Tim; Radix isolated
+// We show 5 of our algs: Insertion, Quick, Merge, Tim, Radix
+// Layout nodes: Ins(bottom-left), Quick(middle-left), Merge(middle), Tim(top-middle), Radix(right)
+const POSET_NODES = [
+  {id:'insertion', label:'Ins', x:80,  y:110},
+  {id:'quick',     label:'Qck', x:160, y:100},
+  {id:'merge',     label:'Mrg', x:240, y:70},
+  {id:'tim',       label:'Tim', x:190, y:30},
+  {id:'radix',     label:'Rad', x:380, y:70},
+];
+const POSET_EDGES = [
+  ['insertion','tim'],
+  ['quick','merge'],
+  ['merge','tim'],
+];
+
+function renderPoset(winnerKey) {
+  const svg=document.getElementById('poset-svg');
+  svg.innerHTML='';
+  // edges
+  POSET_EDGES.forEach(([a,b])=>{
+    const na=POSET_NODES.find(n=>n.id===a);
+    const nb=POSET_NODES.find(n=>n.id===b);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',na.x); line.setAttribute('y1',na.y);
+    line.setAttribute('x2',nb.x); line.setAttribute('y2',nb.y);
+    line.setAttribute('class','poset-edge');
+    svg.appendChild(line);
+  });
+  // nodes
+  POSET_NODES.forEach(n=>{
+    const idx=ALG_KEYS.indexOf(n.id);
+    const isWinner=(n.id===winnerKey);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','poset-node');
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx',n.x); circle.setAttribute('cy',n.y); circle.setAttribute('r',isWinner?14:10);
+    circle.setAttribute('fill',isWinner?ALG_COLORS[idx]:'#21262d');
+    circle.setAttribute('stroke',ALG_COLORS[idx]);
+    circle.setAttribute('stroke-width',isWinner?2.5:1.5);
+    const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x',n.x); text.setAttribute('y',n.y+4);
+    text.setAttribute('class','poset-label');
+    text.setAttribute('fill',isWinner?'#0d1117':ALG_COLORS[idx]);
+    text.textContent=n.label;
+    g.appendChild(circle); g.appendChild(text);
+    svg.appendChild(g);
+  });
+  // add legend label
+  const legendY=135;
+  POSET_NODES.forEach(n=>{
+    const idx=ALG_KEYS.indexOf(n.id);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',n.x); t.setAttribute('y',legendY);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size','8');
+    t.setAttribute('fill','#8b949e');
+    t.textContent=ALG_NAMES[idx];
+    svg.appendChild(t);
+  });
+  // radix isolated label
+  const isolLabel=document.createElementNS('http://www.w3.org/2000/svg','text');
+  isolLabel.setAttribute('x',380); isolLabel.setAttribute('y',90);
+  isolLabel.setAttribute('text-anchor','middle'); isolLabel.setAttribute('font-size','8');
+  isolLabel.setAttribute('fill','#8b949e'); isolLabel.textContent='(isolated)';
+  svg.appendChild(isolLabel);
+}
+
+function updateUrComponents(winnerKey) {
+  const el=document.getElementById('ur-components');
+  el.textContent = winnerKey ? `ur-components (${ALG_NAMES[ALG_KEYS.indexOf(winnerKey)]}): ${UR_COMPONENTS[winnerKey]}` : 'ur-components: —';
+}
+
+// ── Main Race Logic ────────────────────────────────────────────────────────
+function doRace() {
+  if(!currentArray.length) return;
+  const results=runRace(currentArray);
+  const wIdx=determineWinner(results);
+  showRacePanel(results, wIdx);
+  updateMarkov(wIdx);
+  renderPoset(ALG_KEYS[wIdx]);
+  updateUrComponents(ALG_KEYS[wIdx]);
+  statusEl.textContent=`Race #${++raceCount} — Winner: ${ALG_NAMES[wIdx]} (${results[wIdx].comparisons===0?'bucket sort':results[wIdx].comparisons+' cmps'})`;
+  return wIdx;
+}
+
+function newArray() {
+  const type=document.getElementById('input-type').value;
+  const n=parseInt(document.getElementById('size-slider').value);
+  currentArray=generateArray(type,n);
+  renderBars(currentArray,{});
+  vizInfo.textContent=`${n} elements · ${type}`;
+  document.getElementById('race-panel').style.display='none';
+}
+
+// ── Auto Loop ──────────────────────────────────────────────────────────────
+async function autoLoopStep() {
+  if(!autoLoop) return;
+  newArray();
+  const wIdx=doRace();
+  await runAnimation(ALG_KEYS[wIdx], currentArray);
+  if(autoLoop) {
+    autoTimer=setTimeout(autoLoopStep, 400);
+  }
+}
+
+// ── Event Listeners ────────────────────────────────────────────────────────
+document.getElementById('btn-race').addEventListener('click',()=>{
+  if(!currentArray.length) newArray();
+  doRace();
+});
+
+document.getElementById('btn-new').addEventListener('click',()=>{
+  animating=false;
+  newArray();
+});
+
+document.getElementById('btn-animate').addEventListener('click',()=>{
+  if(!currentArray.length) newArray();
+  if(animating){animating=false;return;}
+  const algKey=document.getElementById('alg-select').value;
+  runAnimation(algKey,[...currentArray]);
+});
+
+document.getElementById('btn-auto').addEventListener('click',function(){
+  autoLoop=!autoLoop;
+  this.classList.toggle('active',autoLoop);
+  if(autoLoop){
+    autoLoopStep();
+  } else {
+    animating=false;
+    if(autoTimer) clearTimeout(autoTimer);
+  }
+});
+
+document.getElementById('size-slider').addEventListener('input',function(){
+  document.getElementById('size-val').textContent=this.value;
+});
+
+document.getElementById('speed-slider').addEventListener('input',function(){
+  document.getElementById('speed-val').textContent=this.value;
+});
+
+document.getElementById('input-type').addEventListener('change',()=>{
+  animating=false;
+  newArray();
+  const type=document.getElementById('input-type').value;
+  statusEl.textContent=`Input changed to: ${type} — re-racing will show adaptation lag in the chain.`;
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────
+renderMarkovMatrix();
+renderPoset(null);
+updateUrComponents(null);
+newArray();
+</script>
+</body>
+</html>
