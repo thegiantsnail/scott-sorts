@@ -116,7 +116,7 @@ The Lawson topology is the common refinement of the Scott topology and the lower
 
 **Theorem.** The Lawson topology on P is the discrete topology. All 256 subsets are Lawson-open.
 
-*Proof.* For every x ∈ P, the singleton {x} = ↑x ∩ ⋂_{y<x} (X \ ↑y) is Lawson-open (the first factor is Scott-open, the remaining factors are lower-open). Since every singleton is open, the topology is discrete. ∎
+*Proof.* For every x ∈ P, the singleton {x} = ↑x ∩ ⋂_{y>x} (X \\ ↑y) is Lawson-open (the first factor is Scott-open, the remaining factors are lower-open). For maximal elements (Heap, Tim, Radix) the index set {y : y > x} is empty; the empty intersection equals X by convention, so {x} = ↑x ∩ X = ↑x, which is a singleton since x is maximal. Since every singleton is open, the topology is discrete. ∎
 
 ### 4.2 Interpretation
 
@@ -197,7 +197,7 @@ Some algorithms are connected by continuous parameter paths:
 
 ### 7.2 Disconnected Components
 
-Quicksort and Radix sort are isolated — no continuous deformation path connects either to the iterative families. The CFG skeletons are fundamentally different.
+Radix sort is order-theoretically isolated — comparable only to itself in the poset. Quicksort, while connected upward to Merge and Tim, is topologically separated from the swap-based and shift-based families: no continuous deformation path connects it to Bubble, Insertion, or Selection. The CFG skeletons are fundamentally different: Quicksort's divide-by-pivot structure shares no component-subset relation with iterative linear scans.
 
 ### 7.3 De-Optimization is Not Scott-Continuous
 
@@ -237,11 +237,60 @@ The largest class (2,548 maps, 20%) sends every algorithm to an incomparable one
 
 The key novelty is treating algorithms as *points in a topological space* rather than objects to be derived from specifications or classified by operational features.
 
-## 10. Future Directions
+## 10. Sort Compiler: Program Synthesis via Continuous Maps
+
+The endomorphisms of P are not merely combinatorial curiosities — each one specifies a *source-to-source rewrite rule* that maps any sorting algorithm to another point in the poset. `src/sort_compiler.py` implements this compiler.
+
+### 10.1 Operator Taxonomy
+
+| Class | Count | Properties | Semantic role |
+|-------|-------|------------|---------------|
+| Interior operators | 8 | contractive + idempotent + monotone | de-optimization: strip components |
+| Closure operators | 32 | extensive + idempotent + monotone | optimization: add components |
+| `de_accelerate` | — | **not** monotone | topological counter-example (§7.3) |
+
+### 10.2 Interior (De-optimization) Paths
+
+Every interior operator strips ur-components while remaining Scott-continuous. Two semantically meaningful ones:
+
+**`degrade_heap`:** Heap → Selection (strip `{Accelerate, Recurse}`).
+The `_heapify` helper is removed, recursive calls drop from 3 to 0, and the implicit binary tree is replaced by a nested linear scan. The compiled output is canonical `selection_sort`.
+
+**`strip_merge_only`:** Merge → Quick (strip `{Merge}`).
+The `_merge` helper and its while-loop are removed; the combining step becomes list-comprehension partitioning and concatenation. The compiled output is `quicksort`.
+
+Both transforms are **Scott-continuous** because they move downward in the poset.
+
+### 10.3 Closure (Optimization) Paths
+
+**`add_merge`:** Quick → Merge (add `{Merge}`).
+Inserts the `_merge` combinator: list comprehensions → slices + while-loop merge. AST delta: +1 function definition, +4 slices, −3 list comprehensions, +1 loop.
+
+**`recursify_insertion`:** Insertion → Tim (add `{Accelerate, Merge, Recurse, Split}`).
+The most dramatic transform: a simple 2-loop insertion sort gains +2 helper functions, +6 loops, and +2 recursive call sites — yielding Timsort's divide-and-conquer scaffold with adaptive run detection.
+
+**`maximize`:** maps every algorithm to the most complex point above it in the poset (Bubble/Selection → Heap; Quick/Merge/Insertion → Tim; Radix stays).
+
+### 10.4 The Discontinuous Counter-Example (Verified Computationally)
+
+The `de_accelerate` map (Heap → Selection, Tim → Merge) is **not** Scott-continuous. The compiler verifies this mechanically:
+
+```
+Witness: Insertion ≤ Tim  but  f(Insertion) = Insertion ⊄ Merge = f(Tim)
+Missing components: ['Iterate', 'Shift']
+```
+
+`Shift` and `Iterate` are present in `f(Insertion) = Insertion` but absent from `f(Tim) = Merge`. Monotonicity is violated. You can strip acceleration from a single algorithm, but you cannot do so *continuously* across the whole poset.
+
+### 10.5 Full Compilation Table
+
+Running `python src/sort_compiler.py` prints a full `operator × algorithm → target` matrix and the AST structural diff for each non-trivial transform. Every named operator is verified against the three axioms (monotone + contractive/extensive + idempotent) before the demo runs.
+
+## 11. Future Directions
 
 - **Infinite enrichment.** Extend the poset to include all sorting algorithms (counting sort, bucket sort, library sort, smoothsort, etc.) and study the Scott topology on the resulting infinite dcpo, where the inaccessibility condition becomes non-trivial.
 - **Crown topology connection.** The Lawson topology's "observe absence" power mirrors the Independent Veto topology (K* = max) in Open Crown Type Theory, where the gap between Scott and Lawson corresponds to the gap between Series and Veto evaluation.
-- **Program transformation as continuous maps.** Formalize specific refactoring operations (loop unrolling, memoization, data structure replacement) as Scott-continuous maps between algorithm spaces.
+- **Program transformation as continuous maps.** The interior and closure operators are now implemented as a source-to-source compiler in `src/sort_compiler.py` (Section 10). Extending to finer-grained transforms (loop unrolling, memoization, arbitrary data-structure replacement) remains open.
 - **Galois connection.** The closure/interior operator pairing suggests a Galois connection between "upgrade" and "simplify" that could be formalized.
 
 ## References

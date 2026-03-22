@@ -21,4 +21,8 @@ echo "=== 4. Efficiency Ranking & Symmetry Classes ==="
 python src/efficiency_symmetry.py
 
 echo ""
+echo "=== 5. Sort Compiler — Source-to-Source Transformations ==="
+python src/sort_compiler.py
+
+echo ""
 echo "=== All analyses complete. ==="
