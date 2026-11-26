@@ -214,7 +214,7 @@ Some algorithms are connected by continuous parameter paths:
 
 ### 7.2 Disconnected Components
 
-Radix sort is order-theoretically isolated — comparable only to itself in the poset. Quicksort, while connected upward to Merge and Tim, is topologically separated from the swap-based and shift-based families: no continuous deformation path connects it to Bubble, Insertion, or Selection. The CFG skeletons are fundamentally different: Quicksort's divide-by-pivot structure shares no component-subset relation with iterative linear scans.
+Radix sort is order-theoretically isolated — comparable only to itself in the poset. In the Alexandrov (= Scott) topology on a finite poset, a continuous path joins two points exactly when a chain of comparabilities links them, so the path components are the connected components of the comparability graph. P has three: {Quick, Merge, Insertion, Tim}, {Bubble, Selection, Heap} and {Radix}. Quicksort is therefore path-connected to Insertion through Merge and Tim (Quick ≤ Merge ≤ Tim ≥ Insertion), but no continuous deformation path connects it to the swap-based family (Bubble, Selection, Heap) or to Radix. The CFG skeletons are fundamentally different: Quicksort's divide-by-pivot structure shares no component-subset relation with the swap-and-select scans.
 
 ### 7.3 De-Optimization is Not Scott-Continuous
 
@@ -305,7 +305,7 @@ Running `python src/sort_compiler.py` prints a full `operator × algorithm → t
 
 ## 11. Triplet Hybrid Experiments
 
-The pairwise hybrid results (Section 8) showed that combining disjoint ur-component sets beats any single-paradigm algorithm. Section 11 pushes this further: **three-tier dispatch** `Outer → Mid → Inner`, where the outer layer handles large sub-arrays (`n > 128`), the mid layer handles medium sub-arrays (`16 < n ≤ 128`), and the inner layer handles the base case (`n ≤ 16`). `src/triplet_test.py` exhausts the combination space: Outer ∈ {Quick, Merge} × Mid ∈ {Quick, Merge, Heap, Insertion, Selection, Radix} × Inner ∈ {Insertion, Selection, Bubble} = **36 triplets**, tested across 13 input classes × 3 sizes × 8 seeds = **11,232 trials**, all correct.
+The pairwise hybrid results (the Hybrid_* rows in Appendix A.1 and the Pull network table in Appendix A.5) showed that combining disjoint ur-component sets beats any single-paradigm algorithm. Section 11 pushes this further: **three-tier dispatch** `Outer → Mid → Inner`, where the outer layer handles large sub-arrays (`n > 128`), the mid layer handles medium sub-arrays (`16 < n ≤ 128`), and the inner layer handles the base case (`n ≤ 16`). `src/triplet_test.py` exhausts the combination space: Outer ∈ {Quick, Merge} × Mid ∈ {Quick, Merge, Heap, Insertion, Selection, Radix} × Inner ∈ {Insertion, Selection, Bubble} = **36 triplets**, tested across 13 input classes × 3 sizes × 8 seeds = **11,232 trials**, all correct.
 
 ### 11.1 Correctness and Stability
 
@@ -335,7 +335,7 @@ Placing Selection as the mid-layer eliminates all performance gains from the out
 | T_MSI (Merge/Selection/Insertion) | 4.150 | 67,257 |
 | T_QSI (Quick/Selection/Insertion) | 3.559 | 58,336 |
 
-The O(n²) growth of Selection on sub-arrays in the range `(16, 128]` dominates entirely. For comparison, T_MRI runs in 0.787ms (5.3× faster) with 2,233 comparisons vs. 67,257 (30× fewer). This confirms the topological picture: Selection and Radix are in the same connected component of the poset as Bubble, and routing medium sub-arrays through them defeats the purpose of the outer O(n log n) structure.
+The O(n²) growth of Selection on sub-arrays in the range `(16, 128]` dominates entirely. For comparison, T_MRI runs in 0.787ms (5.3× faster) with 2,233 comparisons vs. 67,257 (30× fewer). This confirms the topological picture: Selection is in the same connected component of the poset as Bubble ({Bubble, Selection, Heap}, apart from the Quick–Merge–Tim family), and routing medium sub-arrays through it defeats the purpose of the outer O(n log n) structure.
 
 ### 11.4 The T_QMI / T_MQI Symmetry
 
@@ -356,7 +356,7 @@ The triplet results confirm that the ur-component structure of the poset predict
 - **Selection mid collapses** because `{Compare, Swap, Select}` is a subset of components already exercised by Quick; the hybrid adds no new capability while extending O(n²) behavior to the mid range.
 - **Insertion inner universally wins** over Selection and Bubble inner because `{Shift, Iterate}` is strictly more efficient than `{Swap, Iterate}` or `{Compare, Swap}` on small arrays with nearly-sorted structure at the leaves.
 
-These patterns are not coincidental — they are consequences of the poset's topology. Algorithms high in the ordering (Tim, Radix) dominate as mid-layers because their ur-component sets are larger; algorithms low in the ordering (Bubble, Selection) are best confined to the inner base case or excluded entirely.
+These patterns are not coincidental — they are consequences of the poset's topology. Radix does not dominate as a mid-layer by being high in the ordering — it is an isolated point with |C| = 2 — but because its component set is disjoint from Quick's and Merge's (Section 11.2), so the hybrid gains a capability neither outer layer has. The O(n²) members of Bubble's component (Bubble, Selection) are best confined to the inner base case or excluded entirely.
 
 ## 12. Future Directions
 
@@ -448,7 +448,7 @@ Tim baseline: 1.144 ms / 8,595 mean comparisons. **14 of 36 triplets beat Tim.**
 | *(22 more, all ≥ 1.1× slower)* | … | … | |
 | T_MSI (Merge/Selection/Insertion) | 4.150 | 67,257 | 3.6× slower |
 
-All Selection-mid triplets finish below Tim; all Radix-mid triplets finish above it.
+All six Radix-mid triplets beat Tim and are the six fastest; all six Selection-mid triplets are slower than Tim (3.40–4.15 ms) and are the six slowest.
 
 ### A.4 Extended Poset P* — Component Sets and Scott-Open Set Count
 
